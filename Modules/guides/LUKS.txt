@@ -1,0 +1,6 @@
+sudo cryptsetup luksFormat /dev/sda1 -> Must be a specific partition
+sudo cryptsetup open /dev/sda1 decryptedname
+
+you can then create the filesystem on the device, eg.
+mkfs.ext4 /dev/mapper/decryptedname
+

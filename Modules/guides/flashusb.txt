@@ -1,0 +1,5 @@
+to flash a drive simply do:
+
+cp /pathtoiso/arch.iso /dev/sda
+
+the iso contains all the bytes for everything including the filesystem etc, so just overwrite the device with what the iso wants.

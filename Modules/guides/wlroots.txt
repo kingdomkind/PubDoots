@@ -1,0 +1,102 @@
+This file (scene.c) is part of the wlroots scene graph API implementation. It provides the core functionality for managing a hierarchical scene graph where nodes represent graphical elements to be rendered. Let me explain the key concepts and hierarchy:
+
+Core Concepts
+Scene Graph: A tree structure where each node represents a drawable element or container
+Rendering Pipeline: Handles visibility calculation, damage tracking, and frame composition
+Direct Scanout: Optimization that bypasses composition when possible
+Damage Tracking: Efficiently tracks changed regions to minimize rendering
+Output Management: Handles multiple displays with independent state
+
+Node Hierarchy
+The scene graph is built from these node types:
+
+Base Node (wlr_scene_node)
+Common properties: position, visibility, parent-child relationships
+
+Types:
+WLR_SCENE_NODE_TREE
+WLR_SCENE_NODE_RECT
+WLR_SCENE_NODE_BUFFER
+
+Tree Node (wlr_scene_tree)
+Container node that can have children
+Represents branch in the scene hierarchy
+Manages child node list
+
+Rectangle Node (wlr_scene_rect)
+Draws a solid-colored rectangle
+Properties: width, height, RGBA color
+
+Buffer Node (wlr_scene_buffer)
+Draws texture/buffer content
+Key features:
+Buffer/texture management
+Opacity control
+Transformations (scale, rotate)
+Damage tracking
+Frame events
+Output enter/leave events
+
+Scene Output
+Manages per-display state:
+wlr_scene_output
+Tracks damage regions
+Manages swapchains
+Handles gamma correction
+Render list management
+Direct scanout optimization
+
+Key Functionality
+
+Node Management
+Creation/destruction
+Reparenting
+Visibility control
+Z-ordering (raise/lower)
+
+Rendering
+Recursive visibility calculation
+Damage accumulation
+Render list construction
+Buffer composition
+Gamma correction
+
+Optimizations
+Direct scanout (bypass composition when possible)
+Single-pixel buffer detection
+Black rect optimization (skip unnecessary rendering)
+Damage region minimization
+
+Synchronization
+Frame event propagation
+DRM syncobj timeline management
+Buffer release handling
+
+Debug Features
+Damage highlighting modes
+Transparency region visualization
+
+Important Structures
+wlr_scene: Root scene container
+wlr_scene_node: Base node type
+wlr_scene_output: Per-output state
+wlr_damage_ring: Damage tracking system
+wlr_render_pass: Encapsulates a rendering operation
+
+Rendering Workflow
+Update node visibility and damage regions
+
+Build optimized render list for an output
+
+Attempt direct scanout (if possible)
+
+Otherwise:
+a. Acquire swapchain buffer
+b. Create render pass
+c. Clear background
+d. Render visible nodes (back-to-front)
+e. Add software cursors
+f. Submit render pass
+
+Commit output state
+Send frame done events

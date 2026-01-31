@@ -1,0 +1,1 @@
+> PC definition files are located in /usr/lib/pkgconfig

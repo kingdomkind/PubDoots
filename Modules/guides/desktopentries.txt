@@ -1,0 +1,2 @@
+run update-desktop-database to update the database
+located in /usr/share/applications

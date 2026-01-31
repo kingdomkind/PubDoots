@@ -1,0 +1,47 @@
+NMCLI MINI MAP
+==============
+
+General Info
+------------
+nmcli general status             # Show overall status
+nmcli general hostname           # Show hostname
+nmcli general permissions        # Show user permissions
+nmcli general logging            # Show/change logging level
+
+Networking
+----------
+nmcli networking on/off          # Enable/disable all networking
+nmcli networking connectivity    # Check Internet access
+
+Radio Control
+-------------
+nmcli radio all on/off           # Enable/disable all radios
+nmcli radio wifi on/off          # Enable/disable Wi-Fi
+nmcli radio wwan on/off          # Enable/disable mobile broadband
+
+Connections (Profiles)
+-----------------------
+nmcli connection show            # List saved connections
+nmcli connection up id NAME      # Connect using a saved profile
+nmcli connection down id NAME    # Disconnect a profile
+nmcli connection add ...         # Create a new connection
+nmcli connection modify NAME ... # Modify a saved connection
+nmcli connection delete id NAME  # Delete a saved connection
+nmcli connection reload          # Reload connections from disk
+
+Devices (Hardware)
+------------------
+nmcli device status              # List all devices and status
+nmcli device show DEVICE         # Show detailed device info
+nmcli device connect DEVICE      # Connect a device
+nmcli device disconnect DEVICE   # Disconnect a device
+nmcli device wifi list           # Scan/list Wi-Fi networks
+nmcli device wifi connect SSID password PASSWORD   # Connect to Wi-Fi
+
+Monitor (Live Updates)
+----------------------
+nmcli monitor                    # Watch for changes (connections, devices)
+
+Special (Rare)
+--------------
+nmcli agent secret-agent         # Handle password requests manually

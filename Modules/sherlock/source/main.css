@@ -1,0 +1,17 @@
+:root {
+    --background: hsla(0, 0%, 0%, 0.3);
+    --foreground: hsla(0, 0%, 0%, 0);
+    --foreground-opaque: hsla(0, 0%, 15%, 0.5);
+}
+
+
+window {
+    background: var(--background);
+    border-radius: 25px;
+}
+
+row:selected .tile {
+    background: var(--foreground-opaque);
+    background-color: var(--foreground-opaque);
+    border-radius: 8px;
+}
