@@ -5,5 +5,6 @@
     satty
     grim
     slurp
+    wl-clipboard
   ];
 }
