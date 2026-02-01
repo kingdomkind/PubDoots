@@ -6,6 +6,12 @@
 
   nixpkgs.config.allowUnfree = true;
 
+  # Allow home manager to specify the xdg portals
+  environment.pathsToLink = [
+    "/share/xdg-desktop-portal"
+    "/share/applications"
+  ];
+
   fonts.packages = with pkgs; [
     cascadia-code
   ];
@@ -40,6 +46,7 @@
     extraGroups = [
       "networkmanager"
       "wheel"
+      "libvirtd"
     ];
     packages = with pkgs; [
     ];

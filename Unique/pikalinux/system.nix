@@ -10,15 +10,16 @@
   networking.hostName = "pikalinux";
 
   environment.systemPackages = with pkgs; [
-    git
     yazi
     rustup
     localsend
     signal-desktop
-    xdg-desktop-portal-gtk
     unzip
-    libgcc
     codex
     btop
+    vesktop
+    adwsteamgtk
+    steam
+    tor-browser
   ];
 }
