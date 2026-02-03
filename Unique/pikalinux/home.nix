@@ -8,10 +8,13 @@
     ../../Modules/fastfetch/fastfetch.nix
     ../../Modules/sherlock/sherlock.nix
     ../../Modules/groups/screenshot.nix
+    ../../Modules/groups/shell.nix
     ../../Modules/quickshell/quickshell.nix
     ../../Modules/remote/remote.nix
   ];
 
   home.stateVersion = "25.05";
+
+  xdg.configFile."OpenTabletDriver/settings.json".source = config.lib.file.mkOutOfStoreSymlink ./tablet/settings.json;
 
 }

@@ -40,12 +40,19 @@
         let
           systemPath = hostDir + "/system.nix";
           homePath = hostDir + "/home.nix";
+          modulesDir = ./Modules;
+          uniqueDir = hostDir;
+          userName = "pika";
         in
         nixpkgs.lib.nixosSystem {
           inherit system;
 
           # only needed if your NixOS modules want `inputs`
-          specialArgs = { inherit inputs; };
+          specialArgs = {
+            inherit inputs;
+            inherit modulesDir uniqueDir;
+            inherit userName;
+          };
 
           modules = [
             systemPath
@@ -60,6 +67,8 @@
                 home-manager.extraSpecialArgs = {
                   inherit inputs;
                   inherit (config.networking) hostName;
+                  inherit modulesDir uniqueDir;
+                  inherit userName;
                 };
 
                 home-manager.users.pika = import homePath;
