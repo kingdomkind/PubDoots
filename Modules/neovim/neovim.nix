@@ -1,12 +1,14 @@
-{ config, pkgs, ... }:
+{ pkgs, userName, modulesDir, ... }:
 {
-  xdg.configFile."nvim/init.lua".source =
-    config.lib.file.mkOutOfStoreSymlink ./init.lua;
-
-  home.packages = with pkgs; [
+  environment.systemPackages = with pkgs; [
     rust-analyzer
     nixd
     nixfmt
     neovim
   ];
+
+  home-manager.users.${userName} = { config, ... }: {
+    xdg.configFile."nvim/init.lua".source =
+      config.lib.file.mkOutOfStoreSymlink (modulesDir + "/neovim/init.lua");
+  };
 }

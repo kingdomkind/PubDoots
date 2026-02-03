@@ -1,8 +1,8 @@
 {
-  config,
   pkgs,
   lib,
   inputs,
+  userName,
   ...
 }:
 
@@ -146,99 +146,101 @@ let
 
 in
 {
-  imports = [
-    inputs.arkenfox.hmModules.arkenfox
-  ];
+  home-manager.users.${userName} = { ... }: {
+    imports = [
+      inputs.arkenfox.hmModules.arkenfox
+    ];
 
-  programs.firefox = {
-    enable = true;
+    programs.firefox = {
+      enable = true;
 
-    arkenfox.enable = true;
-    arkenfox.version = "master";
-    package = pkgs.firefox;
+      arkenfox.enable = true;
+      arkenfox.version = "master";
+      package = pkgs.firefox;
 
-    profiles.default = {
-      id = 0;
+      profiles.default = {
+        id = 0;
 
-      arkenfox = {
-        enable = true;
-        enableAllSections = true;
-      };
+        arkenfox = {
+          enable = true;
+          enableAllSections = true;
+        };
 
-      search = {
-        force = true;
-        default = "ddg";
-        privateDefault = "ddg";
-      };
+        search = {
+          force = true;
+          default = "ddg";
+          privateDefault = "ddg";
+        };
 
-      extensions.packages =
-        let
-          addons = inputs.firefox-addons.packages.${system};
-        in
-        [
-          addons.bitwarden
-          addons.ublock-origin
-          addons.tabliss
+        extensions.packages =
+          let
+            addons = inputs.firefox-addons.packages.${system};
+          in
+          [
+            addons.bitwarden
+            addons.ublock-origin
+            addons.tabliss
 
-          (mkThemeXpi {
-            pname = "purple-starfield-animated";
-            version = "1.0";
-            addonId = "{5adf2485-4acd-42a8-b04c-1b0a6b03ddd0}";
-            url = "https://addons.mozilla.org/firefox/downloads/file/4061627/purple-starfield-animated-1.0.xpi";
-            sha256 = "0wvcgd6xqp7zdq57gk3sr5gws4fdxhi566l07crzqcrbgiilgzbm";
-            description = "Animated purple starfield Firefox theme";
-            license = pkgs.lib.licenses.mit; # It is actually cc-by-nc-sa-30
-          })
-        ];
-
-      userChrome = user_chrome;
-
-      settings = user_settings // {
-        "extensions.activeThemeID" = "{5adf2485-4acd-42a8-b04c-1b0a6b03ddd0}";
-
-        "uBlock0@raymondhill.net".settings = {
-          # Find Lists: https://raw.githubusercontent.com/gorhill/uBlock/master/assets/assets.json
-          selectedFilterLists = [
-            "ublock-filters"
-            "ublock-badware"
-            "ublock-privacy"
-            "ublock-unbreak"
-            "ublock-quick-fixes"
-            "adguard-cookies"
-            "ublock-cookies-adguard"
+            (mkThemeXpi {
+              pname = "purple-starfield-animated";
+              version = "1.0";
+              addonId = "{5adf2485-4acd-42a8-b04c-1b0a6b03ddd0}";
+              url = "https://addons.mozilla.org/firefox/downloads/file/4061627/purple-starfield-animated-1.0.xpi";
+              sha256 = "0wvcgd6xqp7zdq57gk3sr5gws4fdxhi566l07crzqcrbgiilgzbm";
+              description = "Animated purple starfield Firefox theme";
+              license = pkgs.lib.licenses.mit; # It is actually cc-by-nc-sa-30
+            })
           ];
+
+        userChrome = user_chrome;
+
+        settings = user_settings // {
+          "extensions.activeThemeID" = "{5adf2485-4acd-42a8-b04c-1b0a6b03ddd0}";
+
+          "uBlock0@raymondhill.net".settings = {
+            # Find Lists: https://raw.githubusercontent.com/gorhill/uBlock/master/assets/assets.json
+            selectedFilterLists = [
+              "ublock-filters"
+              "ublock-badware"
+              "ublock-privacy"
+              "ublock-unbreak"
+              "ublock-quick-fixes"
+              "adguard-cookies"
+              "ublock-cookies-adguard"
+            ];
+          };
         };
       };
-    };
 
-    profiles.work = {
-      id = 1;
-      arkenfox.enable = false;
+      profiles.work = {
+        id = 1;
+        arkenfox.enable = false;
 
-      extensions.packages =
-        let
-          addons = inputs.firefox-addons.packages.${system};
-        in
-        [
-          addons.bitwarden
-          addons.ublock-origin
-          addons.tabliss
+        extensions.packages =
+          let
+            addons = inputs.firefox-addons.packages.${system};
+          in
+          [
+            addons.bitwarden
+            addons.ublock-origin
+            addons.tabliss
 
-          (mkThemeXpi {
-            pname = "falling-snow-animated-theme";
-            version = "1.0";
-            addonId = "{282f6081-e216-40d4-b31a-9e6f51b473e7}";
-            url = "https://addons.mozilla.org/firefox/downloads/file/4146711/falling_snow_animated_theme-1.0.xpi";
-            sha256 = "16xapqi8irnbzx98x64jgqrzc5zm8v60qw5avh28ni9fc91vrccq";
-            description = "Enjoy this wintery dark blue animated falling snow theme!";
-            license = pkgs.lib.licenses.mit; # i forgot what this one actually was
-          })
-        ];
+            (mkThemeXpi {
+              pname = "falling-snow-animated-theme";
+              version = "1.0";
+              addonId = "{282f6081-e216-40d4-b31a-9e6f51b473e7}";
+              url = "https://addons.mozilla.org/firefox/downloads/file/4146711/falling_snow_animated_theme-1.0.xpi";
+              sha256 = "16xapqi8irnbzx98x64jgqrzc5zm8v60qw5avh28ni9fc91vrccq";
+              description = "Enjoy this wintery dark blue animated falling snow theme!";
+              license = pkgs.lib.licenses.mit; # i forgot what this one actually was
+            })
+          ];
 
-      userChrome = user_chrome;
+        userChrome = user_chrome;
 
-      settings = user_settings // {
-        "extensions.activeThemeID" = "{282f6081-e216-40d4-b31a-9e6f51b473e7}";
+        settings = user_settings // {
+          "extensions.activeThemeID" = "{282f6081-e216-40d4-b31a-9e6f51b473e7}";
+        };
       };
     };
   };

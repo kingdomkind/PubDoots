@@ -5,14 +5,14 @@
   pkgs,
   lib,
   inputs,
+  userName,
   ...
 }:
 {
-  xdg.configFile."hypr/hyprland.conf".source =
-    config.lib.file.mkOutOfStoreSymlink (modulesDir + "/hypr/hyprland.conf");
-
-  xdg.configFile."hypr/hyprext.conf".source =
-    config.lib.file.mkOutOfStoreSymlink (uniqueDir + "/hyprext.conf");
+  programs.hyprland = {
+    enable = true;
+    xwayland.enable = true;
+  };
 
   xdg.portal = {
     enable = true;
@@ -23,8 +23,15 @@
     ];
   };
 
-  home.packages = with pkgs; [
-    # hyprland
+  environment.systemPackages = with pkgs; [
     inputs.rose-pine-hyprcursor.packages.${pkgs.stdenv.hostPlatform.system}.default
   ];
+
+  home-manager.users.${userName} = { config, ... }: {
+    xdg.configFile."hypr/hyprland.conf".source =
+      config.lib.file.mkOutOfStoreSymlink (modulesDir + "/hypr/hyprland.conf");
+
+    xdg.configFile."hypr/hyprext.conf".source =
+      config.lib.file.mkOutOfStoreSymlink (uniqueDir + "/hyprext.conf");
+  };
 }

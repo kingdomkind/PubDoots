@@ -38,24 +38,21 @@
       mkHost =
         hostDir:
         let
-          systemPath = hostDir + "/system.nix";
-          homePath = hostDir + "/home.nix";
-          modulesDir = ./Modules;
-          uniqueDir = hostDir;
           userName = "pika";
+          hostDirName = builtins.baseNameOf (toString hostDir);
+          modulesDir = "/home/${userName}/PubDoots/Modules";
+          uniqueDir = "/home/${userName}/PubDoots/Unique/${hostDirName}";
         in
         nixpkgs.lib.nixosSystem {
           inherit system;
 
           # only needed if your NixOS modules want `inputs`
           specialArgs = {
-            inherit inputs;
-            inherit modulesDir uniqueDir;
-            inherit userName;
+            inherit inputs modulesDir uniqueDir userName;
           };
 
           modules = [
-            systemPath
+            "${uniqueDir}/system.nix"
             home-manager.nixosModules.home-manager
 
             (
@@ -65,13 +62,8 @@
                 home-manager.useUserPackages = true;
 
                 home-manager.extraSpecialArgs = {
-                  inherit inputs;
-                  inherit (config.networking) hostName;
-                  inherit modulesDir uniqueDir;
-                  inherit userName;
+                  inherit inputs modulesDir uniqueDir userName;
                 };
-
-                home-manager.users.pika = import homePath;
               }
             )
           ];

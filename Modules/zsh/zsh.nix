@@ -18,7 +18,7 @@
       # Aliases
       alias rm='rm -I'
       alias grep='grep --color=auto'
-      alias build-config="sudo nixos-rebuild switch --flake .#"
+      alias build-config="sudo nixos-rebuild switch --flake .# --impure"
       alias vi="nvim"
       alias sudo="sudo "
       alias space="du -sh ./ ; du -sh ./*"

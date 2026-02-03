@@ -1,9 +1,11 @@
-{ config, pkgs, ... }:
+{ pkgs, userName, modulesDir, ... }:
 {
-  xdg.configFile."fastfetch/config.jsonc".source =
-    config.lib.file.mkOutOfStoreSymlink ./config.jsonc;
-
-  home.packages = with pkgs; [
+  environment.systemPackages = with pkgs; [
     fastfetch
   ];
+
+  home-manager.users.${userName} = { config, ... }: {
+    xdg.configFile."fastfetch/config.jsonc".source =
+      config.lib.file.mkOutOfStoreSymlink (modulesDir + "/fastfetch/config.jsonc");
+  };
 }
