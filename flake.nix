@@ -77,6 +77,7 @@
     {
       nixosConfigurations = {
         pikalinux = mkHost ./Unique/pikalinux;
+        brotop = mkHost ./Unique/brotop;
       };
     };
 }
