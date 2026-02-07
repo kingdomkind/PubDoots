@@ -46,6 +46,10 @@
     tor-browser
     krita
     firefox
+    mpv
+    cosmic-files
+    exfatprogs
+
   ];
 
   services.flatpak = {
@@ -60,4 +64,8 @@
       "org.vinegarhq.Sober"
     ];
   };
+
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
+
 }
