@@ -7,11 +7,16 @@
 }:
 {
   imports = [
+    ./hardware-configuration.nix
     ../../Modules/base/base.nix
     ../../Modules/nvidia/nvidia.nix
     ../../Modules/vfio/vfio.nix
     ../../Modules/zsh/zsh.nix
     ../../Modules/groups/shell.nix
+    (import ../../Modules/groups/swapfile.nix {
+      lib = pkgs.lib;
+      ramGiB = 48;
+    })
     ../../Modules/hypr/hyprland.nix
     ../../Modules/neovim/neovim.nix
     ../../Modules/kitty/kitty.nix
@@ -21,6 +26,7 @@
     ../../Modules/groups/screenshot.nix
     ../../Modules/quickshell/quickshell.nix
     ../../Modules/remote/remote.nix
+    ../../Modules/bluetooth/bluetooth.nix
     ./tablet/tablet.nix
   ];
 
@@ -42,18 +48,16 @@
     firefox
   ];
 
-  # Decrypt secondary drive
-  boot.initrd.luks.devices."data" = {
-    device = "/dev/disk/by-uuid/c8dd5d21-4489-4551-a4ed-edea6456a739";
-  };
-
-  fileSystems."/home/pika/Documents" = {
-    device = "/dev/mapper/data";
-    fsType = "btrfs";
-    options = [ "nofail" ];
-  };
-
-  home-manager.users.${userName} = {
-    home.stateVersion = "25.05";
+  services.flatpak = {
+    enable = true;
+    remotes = [
+      {
+        name = "flathub";
+        location = "https://dl.flathub.org/repo/flathub.flatpakrepo";
+      }
+    ];
+    packages = [
+      "org.vinegarhq.Sober"
+    ];
   };
 }

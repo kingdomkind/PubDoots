@@ -1,4 +1,9 @@
-{ pkgs, ... }:
+{
+  pkgs,
+  modulesDir,
+  uniqueDir,
+  ...
+}:
 {
   environment.systemPackages = with pkgs; [
     zoxide
@@ -18,12 +23,31 @@
       # Aliases
       alias rm='rm -I'
       alias grep='grep --color=auto'
-      alias build-config="sudo nixos-rebuild switch --flake .# --impure"
+      alias build-config="cd ${modulesDir}/.. && sudo nixos-rebuild switch --flake .# --impure"
       alias vi="nvim"
       alias sudo="sudo "
       alias space="du -sh ./ ; du -sh ./*"
 
       alias ls="eza --icons=always --colour=always"
+      alias edit='cd ${modulesDir}/..'
+      alias editm='cd ${modulesDir}'
+      alias editu='cd ${uniqueDir}'
+
+      nix-proj() {
+        cat > shell.nix <<'EOF'
+{ pkgs ? import <nixpkgs> {} }:
+
+pkgs.mkShell {
+  packages = with pkgs; [
+
+  ];
+}
+EOF
+        cat > .envrc <<'EOF'
+use nix
+EOF
+        direnv allow
+      }
 
       # Start Hyprland if on TTY1
       if [ "$(tty)" = "/dev/tty1" ]; then exec start-hyprland; fi

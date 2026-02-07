@@ -1,10 +1,12 @@
-{ pkgs, ... }:
+{ pkgs, userName, ... }:
 {
-  imports = [
-    ../../hardware-configuration.nix
-  ];
+  imports = [ ];
 
   nixpkgs.config.allowUnfree = true;
+
+  home-manager.users.${userName} = {
+    home.stateVersion = "25.05";
+  };
 
   # Allow home manager to specify the xdg portals
   environment.pathsToLink = [

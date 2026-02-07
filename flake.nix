@@ -23,6 +23,10 @@
       url = "github:ndom91/rose-pine-hyprcursor";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-flatpak = {
+      url = "github:gmodena/nix-flatpak/?ref=latest";
+    };
   };
 
   outputs =
@@ -53,6 +57,7 @@
 
           modules = [
             "${uniqueDir}/system.nix"
+            inputs.nix-flatpak.nixosModules.nix-flatpak
             home-manager.nixosModules.home-manager
 
             (
