@@ -43,5 +43,10 @@
     tor-browser
     krita
     firefox
+    cosmic-files
+    teams-for-linux
   ];
+
+  services.udisks2.enable = true;
+  services.gvfs.enable = true;
 }
