@@ -24,6 +24,7 @@
       alias rm='rm -I'
       alias grep='grep --color=auto'
       alias build-config="cd ${modulesDir}/.. && sudo nixos-rebuild switch --flake .# --impure"
+      alias update="cd ${modulesDir}/.. && nix flake update"
       alias vi="nvim"
       alias sudo="sudo "
       alias space="du -sh ./ ; du -sh ./*"
