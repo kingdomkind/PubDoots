@@ -14,8 +14,7 @@
     ../../Modules/zsh/zsh.nix
     ../../Modules/groups/shell.nix
     (import ../../Modules/groups/swapfile.nix {
-      lib = pkgs.lib;
-      ramGiB = 48;
+      size = 48;
     })
     ../../Modules/hypr/hyprland.nix
     ../../Modules/neovim/neovim.nix
@@ -49,7 +48,12 @@
     mpv
     cosmic-files
     exfatprogs
-
+    zip
+    unzip
+    libreoffice
+    yt-dlp
+    cloc
+    dino
   ];
 
   services.flatpak = {
@@ -67,5 +71,4 @@
 
   services.udisks2.enable = true;
   services.gvfs.enable = true;
-
 }

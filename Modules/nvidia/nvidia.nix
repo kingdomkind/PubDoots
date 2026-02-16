@@ -10,5 +10,8 @@
 
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
-  hardware.graphics.enable = true;
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true; # For steam
+  };
 }

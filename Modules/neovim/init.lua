@@ -155,6 +155,7 @@ require("lazy").setup({
                 "rust_analyzer",
                 "nixd",
                 "nixfmt",
+                "clangd",
             }
 
             local sole_lsps = {}
