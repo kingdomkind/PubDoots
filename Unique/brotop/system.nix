@@ -12,8 +12,7 @@
     ../../Modules/zsh/zsh.nix
     ../../Modules/groups/shell.nix
     (import ../../Modules/groups/swapfile.nix {
-      lib = pkgs.lib;
-      ramGiB = 16;
+      size = 16;
     })
     ../../Modules/hypr/hyprland.nix
     ../../Modules/neovim/neovim.nix
@@ -25,6 +24,7 @@
     ../../Modules/quickshell/quickshell.nix
     ../../Modules/remote/remote.nix
     ../../Modules/bluetooth/bluetooth.nix
+    ../../Modules/fingerprint/fingerprint.nix
   ];
 
   networking.hostName = "brotop";
