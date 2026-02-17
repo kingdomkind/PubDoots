@@ -43,7 +43,7 @@
         hostDir:
         let
           userName = "pika";
-          hostDirName = builtins.baseNameOf (toString hostDir);
+          hostDirName = baseNameOf (toString hostDir);
           modulesDir = "/home/${userName}/PubDoots/Modules";
           uniqueDir = "/home/${userName}/PubDoots/Unique/${hostDirName}";
         in

@@ -26,6 +26,8 @@
     ../../Modules/quickshell/quickshell.nix
     ../../Modules/remote/remote.nix
     ../../Modules/bluetooth/bluetooth.nix
+    ../../Modules/groups/obs.nix
+
     ./tablet/tablet.nix
   ];
 

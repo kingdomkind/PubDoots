@@ -2,6 +2,7 @@
   config,
   pkgs,
   lib,
+  userName,
   ...
 }:
 {
@@ -71,8 +72,7 @@
   };
 
   users.users = {
-    pika = {
-      # replace with your username
+    userName = {
       extraGroups = [ "kvm" "libvirtd" ];
     };
   };

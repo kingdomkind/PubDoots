@@ -38,17 +38,17 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
+    jack.enable = true;
   };
 
-  services.getty.autologinUser = "pika";
+  services.getty.autologinUser = userName;
 
-  users.users.pika = {
+  users.users.${userName} = {
     isNormalUser = true;
-    description = "pika";
+    description = userName;
     extraGroups = [
       "networkmanager"
       "wheel"
-      "libvirtd"
     ];
     packages = with pkgs; [
     ];

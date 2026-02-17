@@ -5,7 +5,7 @@ local custom = {
 
     system = {
         local_dir = (function()
-            local path = "/home/pika/.cache/nvim/local/"
+            local path = vim.env.HOME .. "/.cache/nvim/local/"
             return path
         end)()
     },
