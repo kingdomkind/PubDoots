@@ -56,6 +56,7 @@
     yt-dlp
     cloc
     dino
+    discordchatexporter-desktop
   ];
 
   services.flatpak = {

@@ -37,7 +37,6 @@
     ];
   };
 
-
   # Many thanks to https://gist.github.com/bluemonk/8e70f5720f9c39d25ffe2e9eb33d550d
   # for showing how to do this
   services.udev.packages = lib.singleton (
@@ -71,10 +70,11 @@
     '';
   };
 
-  users.users = {
-    userName = {
-      extraGroups = [ "kvm" "libvirtd" ];
-    };
+  users.users.${userName} = {
+    extraGroups = [
+      "kvm"
+      "libvirtd"
+    ];
   };
 
   environment.systemPackages = with pkgs; [

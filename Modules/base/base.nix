@@ -46,14 +46,16 @@
   users.users.${userName} = {
     isNormalUser = true;
     description = userName;
+    group = "users";
     extraGroups = [
       "networkmanager"
       "wheel"
     ];
-    packages = with pkgs; [
-    ];
     shell = pkgs.zsh;
   };
+
+  users.groups.${userName} = { };
+
 
   services.openssh.enable = true;
   system.stateVersion = "25.11";
