@@ -38,9 +38,6 @@
     codex
     btop
     vesktop
-    adwsteamgtk
-    steam
-    tor-browser
     krita
     firefox
     cosmic-files

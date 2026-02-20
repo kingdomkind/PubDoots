@@ -3,13 +3,6 @@ local custom = {
         transparent = true
     },
 
-    system = {
-        local_dir = (function()
-            local path = vim.env.HOME .. "/.cache/nvim/local/"
-            return path
-        end)()
-    },
-
     keybinds = {
         show_diagnostic = "<A-v>",
         show_compiler_suggestion = "<A-s>",
@@ -51,23 +44,6 @@ local custom = {
 }
 local kb = custom.keybinds
 
-local lazypath = custom.system.local_dir .. "lazy/lazy.nvim"
-if not (vim.uv or vim.loop).fs_stat(lazypath) then
-    vim.api.nvim_echo({ { "Installing Lazy...", "Normal" } }, true, {})
-    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-    if vim.v.shell_error ~= 0 then
-        vim.api.nvim_echo({
-            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-            { out,                            "WarningMsg" },
-            { "\nPress any key to exit..." },
-        }, true, {})
-        vim.fn.getchar()
-        os.exit(1)
-    end
-end
-vim.opt.rtp:prepend(lazypath)
-
 --> Enable system clipboard support
 vim.opt.clipboard:append("unnamedplus")
 
@@ -102,23 +78,15 @@ vim.api.nvim_create_autocmd("FileType", {
 
 --> Setting Transparency
 local transparent_segments = {}
-if custom.visual.transparent then
-    vim.api.nvim_create_autocmd("ColorScheme", {
-        pattern = "*",
-        callback = function()
-            for _, v in ipairs(transparent_segments) do
-                vim.api.nvim_set_hl(0, v, { bg = "NONE" })
-            end
-        end,
-    })
-end
 
 local function set_transparent(groups)
+    if custom.visual.transparent == true then
     for _, v in ipairs(groups) do
-        table.insert(transparent_segments, v)
         vim.api.nvim_set_hl(0, v, { bg = "NONE" })
     end
 end
+end
+
 
 --> Show errors inline and optionally floating
 vim.diagnostic.config({
@@ -141,270 +109,178 @@ vim.diagnostic.config({
     severity_sort = true,
 })
 
---> Opt is equivalent to require.setup, config is a callback when the plugin loads
---> Setup plugins
-require("lazy").setup({
-    --> Install and enable LSPs
-    {
-        "williamboman/mason-lspconfig.nvim",
-        dependencies = {
-            "neovim/nvim-lspconfig",
-        },
-        config = function()
-            local lsps = {
-                "rust_analyzer",
-                "nixd",
-                "nixfmt",
-                "clangd",
-            }
+--> Enable and configure LSPs
+do
+    local lsps = {
+        "rust_analyzer",
+        "nixd",
+        "clangd",
+        "emmylua_ls"
+    }
 
-            local sole_lsps = {}
-            for _, lsp in pairs(lsps) do
-                if type(lsp) == "string" then
-                    table.insert(sole_lsps, lsp)
-                else
-                    table.insert(sole_lsps, lsp[1])
-                end
-            end
+    for _, lsp in ipairs(lsps) do
+        vim.lsp.enable(lsp)
+    end
+end
 
-            for _, lsp in ipairs(lsps) do
-                local name, config = nil, nil
-                if type(lsp) == "string" then
-                    name = lsp
-                else
-                    name = lsp[1]; config = lsp[2]
-                end
+--> Fuzzy Finding
+do
+    require("telescope").setup({})
+    local builtin = require("telescope.builtin")
 
-                vim.lsp.enable(name)
-                if config ~= nil then
-                    vim.lsp.config(name, config)
-                end
-            end
-        end,
-    },
+    vim.keymap.set("n", kb.live_grep, builtin.live_grep)
+end
 
-    --> Fuzzy Finding
-    {
-        "nvim-telescope/telescope.nvim",
-        tag = "v0.2.0",
-        dependencies = { "nvim-lua/plenary.nvim" },
+--> Better Syntax Highlighting, works in conjunction with LSPs
+do
+    -- require("nvim-treesitter").setup({})
+end
 
-        config = function()
-            require("telescope").setup({})
-            local builtin = require("telescope.builtin")
-
-            vim.keymap.set("n", kb.live_grep, builtin.live_grep)
-        end,
-    },
-
-    --> Better Syntax Highlighting, works in conjunction with LSPs
-    {
-        "nvim-treesitter/nvim-treesitter",
-        branch = "master",
-        lazy = false,
-        build = ":TSUpdate",
-        opts = {
-            ensure_installed = {
-                "lua",
-                "rust",
-                "nix",
-                "css",
-                "markdown",
-                "java",
+--> Toggleable terminal
+do
+    require("toggleterm").setup({
+        shade_terminals = false,
+        start_in_insert = false,
+        highlights = {
+            Normal = {
+                guibg = "NONE",
             },
-            sync_install = false,
-            auto_install = true,
-        }
-    },
-
-    --> Toggleable terminal
-    {
-        "akinsho/toggleterm.nvim",
-        version = "*",
-        config = function()
-            require("toggleterm").setup({
-                shade_terminals = false,
-                start_in_insert = false,
-                highlights = {
-                    Normal = {
-                        guibg = "NONE",
-                    },
-                    NormalFloat = {
-                        guibg = "NONE",
-                    },
-                },
-            })
-
-            vim.keymap.set("n", kb.toggle_terminal, ":ToggleTerm<CR>")
-        end,
-    },
-
-    --> Top Bar
-    {
-        "romgrk/barbar.nvim",
-        version = "*",
-        dependencies = {
-            "lewis6991/gitsigns.nvim",
-            "nvim-tree/nvim-web-devicons",
-        },
-        config = function()
-            require("barbar").setup({
-                -- your options here
-                auto_hide = false,
-            })
-
-            vim.keymap.set("n", kb.prev_buffer, "<Cmd>BufferPrevious<CR>")
-            vim.keymap.set("n", kb.next_buffer, "<Cmd>BufferNext<CR>")
-            vim.keymap.set("n", kb.close_buffer, "<Cmd>BufferClose<CR>")
-
-            set_transparent({
-                "Current",
-                "Inactive",
-                "Alternate",
-                "Visible",
-                "BufferAlternate",
-            })
-        end,
-    },
-
-    --> Bottom Bar
-    {
-        "nvim-lualine/lualine.nvim",
-        dependencies = {
-            "nvim-tree/nvim-web-devicons"
-        },
-        opts = {
-            sections = {
-                lualine_a = { "mode" },
-                lualine_b = { "branch", "diff", "diagnostics" },
-                lualine_c = { "filename" },
-                lualine_x = { "lsp_status", "filetype" },
-                lualine_y = { "progress" },
-                lualine_z = { "location" }
+            NormalFloat = {
+                guibg = "NONE",
             },
+        },
+    })
+
+    vim.keymap.set("n", kb.toggle_terminal, ":ToggleTerm<CR>")
+end
+
+--> Top Bar
+do
+    require("barbar").setup({
+        -- your options here
+        auto_hide = false,
+    })
+
+    vim.keymap.set("n", kb.prev_buffer, "<Cmd>BufferPrevious<CR>")
+    vim.keymap.set("n", kb.next_buffer, "<Cmd>BufferNext<CR>")
+    vim.keymap.set("n", kb.close_buffer, "<Cmd>BufferClose<CR>")
+
+    set_transparent({
+        "Current",
+        "Inactive",
+        "Alternate",
+        "Visible",
+        "BufferAlternate",
+    })
+end
+
+--> Bottom Bar
+do
+    require("lualine").setup({
+        sections = {
+            lualine_a = { "mode" },
+            lualine_b = { "branch", "diff", "diagnostics" },
+            lualine_c = { "filename" },
+            lualine_x = { "lsp_status", "filetype" },
+            lualine_y = { "progress" },
+            lualine_z = { "location" }
+        },
+    })
+end
+
+--> Autocompletions
+do
+    local cmp = require("cmp")
+    cmp.setup({
+        window = {
+            completion = cmp.config.window.bordered(),
+            documentation = cmp.config.window.bordered(),
+        },
+        mapping = cmp.mapping.preset.insert({
+            [kb.prev_completion] = cmp.mapping.select_prev_item(),
+            [kb.next_completion] = cmp.mapping.select_next_item(),
+            [kb.abort_completion] = cmp.mapping.abort(),
+            [kb.confirm_completion] = cmp.mapping.confirm({ select = true }),
+            ["<Up>"] = cmp.config.disable,
+            ["<Down>"] = cmp.config.disable,
+        }),
+        sources = cmp.config.sources({
+            { name = "nvim_lsp" },
+        }, {
+            { name = "buffer" },
+        })
+    })
+end
+
+do
+    require("snacks").setup({
+        indent = {
+            enabled = true
         }
-    },
+    })
+end
 
-    --> Autocompletions
-    {
-        "hrsh7th/nvim-cmp",
-        dependencies = {
-            "L3MON4D3/LuaSnip",
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-nvim-lsp",
-            "saadparwaiz1/cmp_luasnip",
-        },
-        config = function()
-            local cmp = require("cmp")
-            cmp.setup({
-                window = {
-                    completion = cmp.config.window.bordered(),
-                    documentation = cmp.config.window.bordered(),
-                },
-                mapping = cmp.mapping.preset.insert({
-                    [kb.prev_completion] = cmp.mapping.select_prev_item(),
-                    [kb.next_completion] = cmp.mapping.select_next_item(),
-                    [kb.abort_completion] = cmp.mapping.abort(),
-                    [kb.confirm_completion] = cmp.mapping.confirm({ select = true }),
-                    ["<Up>"] = cmp.config.disable,
-                    ["<Down>"] = cmp.config.disable,
-                }),
-                sources = cmp.config.sources({
-                    { name = "nvim_lsp" },
-                }, {
-                    { name = "buffer" },
-                })
-            })
-        end
-
-    },
-
-    {
-        "folke/snacks.nvim",
-        opts = {
-            indent = {
-                enabled = true
-            }
-        },
-    },
-
-    --> File browser tree
-    {
-        "nvim-neo-tree/neo-tree.nvim",
-        branch = "v3.x",
-        dependencies = {
-            "nvim-lua/plenary.nvim",
-            "MunifTanjim/nui.nvim",
-            "nvim-tree/nvim-web-devicons"
-        },
-        config = function()
-            require("neo-tree").setup({
-                -- your config here
-                filesystem = {
-                    use_libuv_file_watcher = true, --> Automatic refresh upon change
-                    follow_current_file = {
-                        enabled = true,            --> When neotree opens, select current file
-                    },
-                    filtered_items = {
-                        visible = true,
-                        --hide_dotfiles = false,
-                        --hide_gitignored = false,
-                    },
-                },
-            })
-
-            set_transparent({
-                "NeoTreeNormal",
-                "NeoTreeNormalNC",
-                "NeoTreeEndOfBuffer",
-                "NeoTreeTitleBar",
-                "NeoTreeVertSplit",
-                "NeoTreeWinSeparator",
-                "NeoTreeTitleBar",
-            })
-
-            vim.keymap.set("n", kb.toggle_tree, ":Neotree toggle filesystem<CR>")
-        end,
-    },
-
-
-    --> Commenting and Uncommenting Code
-    {
-        "nvim-mini/mini.comment",
-        version = "*",
-        opts = {
-            options = {
-                ignore_blank_line = true,
+--> File browser tree
+do
+    require("neo-tree").setup({
+        -- your config here
+        filesystem = {
+            use_libuv_file_watcher = true, --> Automatic refresh upon change
+            follow_current_file = {
+                enabled = true,            --> When neotree opens, select current file
             },
+            filtered_items = {
+                visible = true,
+                --hide_dotfiles = false,
+                --hide_gitignored = false,
+            },
+        },
+    })
 
-            mappings = {
-                comment = kb.comment_code,
-                comment_line = kb.comment_code,
-                comment_visual = kb.comment_code,
-            }
+    set_transparent({
+        "NeoTreeNormal",
+        "NeoTreeNormalNC",
+        "NeoTreeEndOfBuffer",
+        "NeoTreeTitleBar",
+        "NeoTreeVertSplit",
+        "NeoTreeWinSeparator",
+        "NeoTreeTitleBar",
+    })
+
+    vim.keymap.set("n", kb.toggle_tree, ":Neotree toggle filesystem<CR>")
+end
+
+
+--> Commenting and Uncommenting Code
+do
+    require("mini.comment").setup({
+        options = {
+            ignore_blank_line = true,
+        },
+
+        mappings = {
+            comment = kb.comment_code,
+            comment_line = kb.comment_code,
+            comment_visual = kb.comment_code,
         }
-    },
+    })
+end
 
-    --> Code Formatting
-    {
-        "stevearc/conform.nvim",
-        config = function()
-            local conform = require("conform")
-            conform.setup({})
+--> Code Formatting
+do
+    local conform = require("conform")
+    conform.setup({})
 
-            vim.keymap.set("n", kb.format_code, function()
-                conform.format({ async = true, lsp_fallback = true })
-            end)
-        end,
-    },
+    vim.keymap.set("n", kb.format_code, function()
+        conform.format({ async = true, lsp_fallback = true })
+    end)
+end
 
-    --> Start Screen
-    {
-        "nvim-mini/mini.starter",
-        version = "*",
-        opts = {
-            autoopen = true,
-            header = [[
+--> Start Screen
+do
+    require("mini.starter").setup({
+        autoopen = true,
+        header = [[
 ╔══════════════════════════════════════════════════════════════════════════════╗
 ║⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀║
 ║⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀║
@@ -442,78 +318,57 @@ require("lazy").setup({
 ║⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⢠⡞⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠘⡀⠀⠀⠀⠀⠀⠀⣧⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀║
 ║⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⡾⠁⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⢇⣀⣀⣠⣀⠀⠀⢻⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀║
 ╚══════════════════════════════════════════════════════════════════════════════╝]],
-            footer = os.date("%Y-%m-%d"),
-            items = nil,
-        }
-    },
+        footer = os.date("%Y-%m-%d"),
+        items = nil,
+    })
+end
 
-    --> Md Preview
-    {
-        "brianhuster/live-preview.nvim",
-        config = function()
-            require("live-preview").setup({})
-            vim.keymap.set("n", kb.toggle_md_preview, ":LivePreview start<CR>")
-        end
-    },
+--> Md Preview
+do
+    require("live-preview").setup({})
+    vim.keymap.set("n", kb.toggle_md_preview, ":LivePreview start<CR>")
+end
 
-    --> Write as Sudo, pure vim
-    {
-        "lambdalisue/vim-suda",
-        init = function()
-            --> Auto ask sudo when required
-            vim.g.suda_smart_edit = 1
-            vim.cmd("cabbrev sudow SudaWrite")
-        end,
+--> Write as Sudo, pure vim
+do
+    --> Auto ask sudo when required
+    vim.g.suda_smart_edit = 1
+    vim.cmd("cabbrev sudow SudaWrite")
+end
 
-    },
+--> Fix Delete
+do
+    require("cutlass").setup({
+        cut_key = "x",
+        override_del = true,
+    })
+end
 
-    --> Fix Delete
-    {
-        "gbprod/cutlass.nvim",
-        opts = {
-            cut_key = "x",
-            override_del = true,
-        }
-    },
+--> Colour Scheme
+do
+    require("catppuccin").setup({
+        flavour = "mocha",
+        transparent_background = custom.visual.transparent,
 
-    --> Colour Scheme
-    {
-        "catppuccin/nvim",
-        name = "catppuccin",
-        priority = 1000,
-        opts = {
-            flavour = "mocha",
-            transparent_background = custom.visual.transparent,
-
-            integrations = {
-                cmp = true,
-                nvimtree = true,
-                treesitter = true,
-            },
+        integrations = {
+            cmp = true,
+            nvimtree = true,
+            treesitter = true,
         },
-        config = function()
-            vim.cmd.colorscheme("catppuccin")
+    })
 
-            set_transparent({
-                "StatusLine",
-                "TabLine",
-                "TabLineFill",
-                "Normal",
-                "NormalNC",
-                "VertSplit",
+    vim.cmd.colorscheme("catppuccin")
 
-            })
-        end
-    }
+    set_transparent({
+        "StatusLine",
+        "TabLine",
+        "TabLineFill",
+        "Normal",
+        "NormalNC",
+        "VertSplit",
 
-}, {
-    --> Lazy plugin config
-    root = custom.system.local_dir .. "plugins",
-    lockfile = custom.system.local_dir .. "lazy.lock",
-    git = {
-        timeout = 600, --> Timeout in seconds until clones exit
-    }
-})
+    })
+end
 
 --> LSP specific binds, must be created on attachment
 vim.api.nvim_create_autocmd("LspAttach", {
@@ -525,6 +380,7 @@ vim.api.nvim_create_autocmd("LspAttach", {
             buffer = args.buf,
             desc = "Show variable type"
         })
+
     end,
 })
 
