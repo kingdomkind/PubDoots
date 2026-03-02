@@ -11,7 +11,7 @@
       keymap = {
         manager.prepend_keymap = [
           {
-            on = "<C-n>";
+            on = "<A-d>";
             run = "shell '${lib.getExe pkgs.ripdrag} \"$@\" -x 2>/dev/null &'";
             desc = "Drag file";
           }
