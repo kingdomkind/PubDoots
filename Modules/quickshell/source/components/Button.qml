@@ -5,7 +5,7 @@ import "../singletons" as Singletons
 Rectangle {
     id: button
     readonly property alias text: buttonText
-    property color baseColor: Singletons.Style.primaryColor
+    property color baseColor: Singletons.Globals.primaryColor
 
     radius: height
     signal clicked

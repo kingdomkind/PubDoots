@@ -25,9 +25,11 @@ Rectangle {
         id: widgets
         anchors.fill: parent
 
-        Components.Panel {
+        Rectangle {
             Layout.preferredWidth: parent.width * 0.25
-            Layout.preferredHeight: Singletons.Style.panelHeight
+            Layout.preferredHeight: 300
+            color: Singletons.Globals.backgroundColor
+            radius: 20
 
             Flickable {
                 anchors.fill: parent
@@ -36,10 +38,10 @@ Rectangle {
 
                 Column {
                     id: statsColumn
-                    x: Singletons.Style.spacingSm
-                    y: Singletons.Style.spacingSm
-                    width: parent.width - Singletons.Style.spacingMd
-                    spacing: Singletons.Style.spacingXs
+                    x: 10
+                    y: 10
+                    width: parent.width - 20
+                    spacing: 5
 
                     Components.SplitText {
                         id: uptimeText
@@ -62,11 +64,6 @@ Rectangle {
                         leftText.text: "Time Left"
                         rightText.text: Singletons.Globals.getBatteryTimeLeft()
                     }
-                    Components.SplitText {
-                        id: networkText
-                        leftText.text: "Network"
-                        rightText.text: Singletons.Globals.getNetworkState()
-                    }
 
                     Connections {
                         target: Singletons.SecTimer
@@ -76,7 +73,6 @@ Rectangle {
                             wattsText.rightText.text = Singletons.Globals.getBatteryWatts();
                             chargingText.rightText.text = Singletons.Globals.getBatteryCharging();
                             finishTimeText.rightText.text = Singletons.Globals.getBatteryTimeLeft();
-                            networkText.rightText.text = Singletons.Globals.getNetworkState();
                         }
                     }
                 }
@@ -84,12 +80,14 @@ Rectangle {
         }
 
         ColumnLayout {
-            spacing: Singletons.Style.spacingSm
+            spacing: 10
             Layout.preferredWidth: parent.width * 0.75
-            Layout.preferredHeight: Singletons.Style.panelHeight
-            Components.Panel {
+            Layout.preferredHeight: 300
+            Rectangle {
                 Layout.preferredWidth: parent.width
                 Layout.preferredHeight: parent.height * 0.86
+                color: Singletons.Globals.backgroundColor
+                radius: 20
 
                 ListView {
                     add: Transition {
@@ -130,39 +128,66 @@ Rectangle {
 
                     clip: true
                     anchors {
-                        topMargin: Singletons.Style.spacingMd
-                        bottomMargin: Singletons.Style.spacingMd
-                        leftMargin: Singletons.Style.spacingSm
-                        rightMargin: Singletons.Style.spacingSm
+                        topMargin: 20
+                        bottomMargin: 20
+                        leftMargin: 10
+                        rightMargin: 10
                     }
                     anchors.fill: parent
                     model: Singletons.Notifications.trackedNotifs
-                    spacing: Singletons.Style.spacingSm
+                    spacing: 10
                     delegate: Rectangle {
                         id: notif
                         required property var modelData
 
-                        color: Singletons.Style.primaryColor
-                        radius: Singletons.Style.radiusSm
+                        color: Singletons.Globals.primaryColor
+                        radius: 10
 
                         height: content.height
                         width: parent.width
 
                         Item {
                             id: content
-                            height: notifRow.implicitHeight + Singletons.Style.spacingMd
+                            height: totalNotif.height + 20
                             anchors {
                                 left: parent.left
                                 right: parent.right
-                                leftMargin: Singletons.Style.spacingSm
-                                rightMargin: Singletons.Style.spacingSm
+                                leftMargin: 10
+                                rightMargin: 10
                             }
 
-                            Components.NotificationRow {
-                                id: notifRow
+                            Row {
+                                id: totalNotif
                                 anchors.verticalCenter: parent.verticalCenter
+                                height: totalTextNotif.implicitHeight
                                 width: parent.width
-                                notification: notif.modelData
+                                spacing: 10
+
+                                Image {
+                                    height: 32
+                                    anchors.verticalCenter: parent.verticalCenter
+
+                                    width: notif.modelData.appIcon != "" ? height : 0
+                                    //source: Quickshell.iconPath(notif.modelData?.appIcon, "image-missing")
+                                    source: notif.modelData.appIcon
+                                }
+
+                                Column {
+                                    id: totalTextNotif
+                                    width: parent.width
+                                    Text {
+                                        text: notif.modelData.appName
+                                        font.weight: Font.Medium
+                                    }
+                                    Text {
+                                        text: notif.modelData.body
+                                        visible: notif.modelData.body != "" ? true : false
+                                    }
+                                    Text {
+                                        text: notif.modelData.summary
+                                        visible: notif.modelData.summary != "" ? true : false
+                                    }
+                                }
                             }
                         }
                     }
@@ -171,17 +196,17 @@ Rectangle {
 
             Rectangle {
                 Layout.preferredWidth: parent.width
-                Layout.preferredHeight: Singletons.Style.footerHeight
+                Layout.preferredHeight: 30
                 color: "transparent"
 
                 RowLayout {
-                    spacing: Singletons.Style.spacingSm
+                    spacing: 10
                     anchors.fill: parent
                     Components.Button {
                         id: doNotDisturb
                         Layout.preferredHeight: parent.height
                         Layout.preferredWidth: parent.height
-                        color: Singletons.Globals.doNotDisturb ? Singletons.Style.backgroundColor : Singletons.Style.primaryColor
+                        color: Singletons.Globals.doNotDisturb ? Singletons.Globals.backgroundColor : Singletons.Globals.primaryColor
                         radius: height
                     }
 
@@ -198,8 +223,8 @@ Rectangle {
 
                     Rectangle {
                         Layout.preferredHeight: parent.height
-                        Layout.preferredWidth: notifNum.implicitWidth + Singletons.Style.spacingMd
-                        color: Singletons.Style.primaryColor
+                        Layout.preferredWidth: notifNum.implicitWidth + 30
+                        color: Singletons.Globals.primaryColor
                         radius: height
 
                         Text {

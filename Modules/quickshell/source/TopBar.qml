@@ -11,7 +11,7 @@ import "widgets" as Widgets
 
 Item {
     id: root
-    height: Singletons.Globals.expanded ? Singletons.Style.barHeight : 0
+    height: Singletons.Globals.expanded ? 50 : 0
     readonly property Rectangle mainPanel: squiggly.mainPanel
 
     Widgets.SquigglyBar {
@@ -22,7 +22,7 @@ Item {
 
         content: Item {
             anchors.verticalCenter: parent.verticalCenter
-            height: Singletons.Style.barContentHeight
+            height: 30
             width: parent.width
 
             Rectangle {
@@ -31,7 +31,7 @@ Item {
                 height: parent.height
 
                 radius: height
-                color: Singletons.Style.primaryColor
+                color: Singletons.Globals.primaryColor
 
                 Text {
                     id: dateText
@@ -39,7 +39,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
-                    font.pointSize: Singletons.Style.textMd
+                    font.pointSize: 14
                     font.bold: true
                 }
             }
@@ -51,14 +51,14 @@ Item {
                 height: parent.height
 
                 radius: height
-                color: Singletons.Style.primaryColor
+                color: Singletons.Globals.primaryColor
                 Text {
                     id: timeText
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
                     verticalAlignment: Text.AlignVCenter
                     font.bold: true
-                    font.pointSize: Singletons.Style.textMd
+                    font.pointSize: 14
                     text: Singletons.Globals.getTime()
                 }
             }
@@ -69,7 +69,7 @@ Item {
                 width: parent.width * 0.15
                 height: parent.height
                 radius: height
-                color: Singletons.Style.primaryColor
+                color: Singletons.Globals.primaryColor
 
                 Text {
                     id: powerText
@@ -78,7 +78,7 @@ Item {
                     text: Singletons.Globals.getBatteryPercent()
                     verticalAlignment: Text.AlignVCenter
                     anchors.verticalCenter: parent.verticalCenter
-                    font.pointSize: Singletons.Style.textMd
+                    font.pointSize: 14
                     font.bold: true
                 }
             }

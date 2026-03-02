@@ -12,7 +12,7 @@ Item {
     id: topBar
     property alias mainPanel: topPanel
     property Item content
-    property int invertCornerWidth: Singletons.Style.invertCornerWidth
+    property int invertCornerWidth: 100
 
     onContentChanged: {
         if (content) {
@@ -29,7 +29,7 @@ Item {
         }
 
         width: 0.8 * topBar.width
-        color: Singletons.Style.backgroundColor
+        color: Singletons.Globals.backgroundColor
         height: topBar.height
         clip: true
 
@@ -59,7 +59,7 @@ Item {
             cornerType: "cubic"
             cornerHeight: parent.height
             cornerWidth: parent.width
-            color: Singletons.Style.backgroundColor
+            color: Singletons.Globals.backgroundColor
             corners: [0]
         }
     }
@@ -78,7 +78,7 @@ Item {
             cornerType: "cubic"
             cornerHeight: parent.height
             cornerWidth: parent.width
-            color: Singletons.Style.backgroundColor
+            color: Singletons.Globals.backgroundColor
             corners: [1]
         }
     }

@@ -3,15 +3,10 @@ import QtQuick
 import Quickshell
 import Quickshell.Services.UPower
 import Quickshell.Hyprland
-// import Quickshell.Networking
 
 Singleton {
-    readonly property real uiScale: (Qt.application && Qt.application.primaryScreen)
-        ? Math.min(
-            Qt.application.primaryScreen.width / 1920,
-            Qt.application.primaryScreen.height / 1080
-        )
-        : 1.0
+    readonly property color backgroundColor: Qt.rgba(15 / 255, 14 / 255, 14 / 255, 0.5)
+    readonly property color primaryColor: Qt.rgba(255 / 255, 218 / 255, 182 / 255, 1)
 
     property bool expanded: false
     property int notifBarTime: 0
@@ -97,23 +92,11 @@ Singleton {
         }
     }
 
-    function getNetworkState() {
-     //   return toString(Networking.DeviceConnectionState)
-    }
-
     function getTime() {
         return Qt.formatDateTime(new Date(), "hh:mm:ss");
     }
 
     function getDate() {
         return Qt.formatDateTime(new Date(), "dd MMM");
-    }
-
-    function px(value) {
-        return Math.round(value * uiScale);
-    }
-
-    function sp(value) {
-        return Math.round(value * uiScale);
     }
 }

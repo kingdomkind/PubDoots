@@ -5,14 +5,13 @@
 
 import QtQuick
 import QtQuick.Shapes
-import "../singletons" as Singletons
 
 Item {
     id: root
     anchors.fill: parent
 
     property var cornerType: "cubic" // cubic, rounded or inverted
-    property int cornerHeight: Singletons.Globals.px(30)
+    property int cornerHeight: 30
     property int cornerWidth: cornerHeight // default is square, but you can set a separate width
      
     property color color: "#000000"

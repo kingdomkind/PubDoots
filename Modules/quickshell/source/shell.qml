@@ -66,7 +66,7 @@ Scope {
                     id: bottomBar
                     anchorTo: topBar.mainPanel
                     x: topBar.x + anchorTo.x
-                    y: anchorTo.y + anchorTo.height + Singletons.Style.spacingSm
+                    y: anchorTo.y + anchorTo.height + 10
                     width: anchorTo.width
                 }
 
