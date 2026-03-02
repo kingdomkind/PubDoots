@@ -4,7 +4,7 @@ import "../singletons" as Singletons
 
 Rectangle {
     color: "transparent"
-    height: 20
+    height: Singletons.Globals.px(20)
     property alias leftText: leftText
     property alias rightText: rightText
     anchors.left: parent.left
@@ -19,7 +19,7 @@ Rectangle {
         Text {
             id: leftText
             color: Singletons.Globals.primaryColor
-            font.pointSize: 10
+            font.pointSize: Singletons.Globals.sp(10)
         }
        
         Item {
@@ -28,14 +28,14 @@ Rectangle {
 
         Rectangle {
             color: Singletons.Globals.primaryColor
-            Layout.preferredWidth: rightText.width + 10
+            Layout.preferredWidth: rightText.width + Singletons.Globals.px(10)
             Layout.preferredHeight: rightText.height
             radius: height
 
             Text {
                 anchors.horizontalCenter: parent.horizontalCenter
                 id: rightText
-                font.pointSize: 10
+                font.pointSize: Singletons.Globals.sp(10)
                 font.bold: true
             }
         }

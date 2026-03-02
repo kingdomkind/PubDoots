@@ -27,9 +27,9 @@ Rectangle {
 
         Rectangle {
             Layout.preferredWidth: parent.width * 0.25
-            Layout.preferredHeight: 300
+            Layout.preferredHeight: Singletons.Globals.px(300)
             color: Singletons.Globals.backgroundColor
-            radius: 20
+            radius: Singletons.Globals.px(20)
 
             Flickable {
                 anchors.fill: parent
@@ -38,10 +38,10 @@ Rectangle {
 
                 Column {
                     id: statsColumn
-                    x: 10
-                    y: 10
-                    width: parent.width - 20
-                    spacing: 5
+                    x: Singletons.Globals.px(10)
+                    y: Singletons.Globals.px(10)
+                    width: parent.width - Singletons.Globals.px(20)
+                    spacing: Singletons.Globals.px(5)
 
                     Components.SplitText {
                         id: uptimeText
@@ -86,14 +86,14 @@ Rectangle {
         }
 
         ColumnLayout {
-            spacing: 10
+            spacing: Singletons.Globals.px(10)
             Layout.preferredWidth: parent.width * 0.75
-            Layout.preferredHeight: 300
+            Layout.preferredHeight: Singletons.Globals.px(300)
             Rectangle {
                 Layout.preferredWidth: parent.width
                 Layout.preferredHeight: parent.height * 0.86
                 color: Singletons.Globals.backgroundColor
-                radius: 20
+                radius: Singletons.Globals.px(20)
 
                 ListView {
                     add: Transition {
@@ -134,32 +134,32 @@ Rectangle {
 
                     clip: true
                     anchors {
-                        topMargin: 20
-                        bottomMargin: 20
-                        leftMargin: 10
-                        rightMargin: 10
+                        topMargin: Singletons.Globals.px(20)
+                        bottomMargin: Singletons.Globals.px(20)
+                        leftMargin: Singletons.Globals.px(10)
+                        rightMargin: Singletons.Globals.px(10)
                     }
                     anchors.fill: parent
                     model: Singletons.Notifications.trackedNotifs
-                    spacing: 10
+                    spacing: Singletons.Globals.px(10)
                     delegate: Rectangle {
                         id: notif
                         required property var modelData
 
                         color: Singletons.Globals.primaryColor
-                        radius: 10
+                        radius: Singletons.Globals.px(10)
 
                         height: content.height
                         width: parent.width
 
                         Item {
                             id: content
-                            height: totalNotif.height + 20
+                            height: totalNotif.height + Singletons.Globals.px(20)
                             anchors {
                                 left: parent.left
                                 right: parent.right
-                                leftMargin: 10
-                                rightMargin: 10
+                                leftMargin: Singletons.Globals.px(10)
+                                rightMargin: Singletons.Globals.px(10)
                             }
 
                             Row {
@@ -167,10 +167,10 @@ Rectangle {
                                 anchors.verticalCenter: parent.verticalCenter
                                 height: totalTextNotif.implicitHeight
                                 width: parent.width
-                                spacing: 10
+                                spacing: Singletons.Globals.px(10)
 
                                 Image {
-                                    height: 32
+                                    height: Singletons.Globals.px(32)
                                     anchors.verticalCenter: parent.verticalCenter
 
                                     width: notif.modelData.appIcon != "" ? height : 0
@@ -202,11 +202,11 @@ Rectangle {
 
             Rectangle {
                 Layout.preferredWidth: parent.width
-                Layout.preferredHeight: 30
+                Layout.preferredHeight: Singletons.Globals.px(30)
                 color: "transparent"
 
                 RowLayout {
-                    spacing: 10
+                    spacing: Singletons.Globals.px(10)
                     anchors.fill: parent
                     Components.Button {
                         id: doNotDisturb
@@ -229,7 +229,7 @@ Rectangle {
 
                     Rectangle {
                         Layout.preferredHeight: parent.height
-                        Layout.preferredWidth: notifNum.implicitWidth + 30
+                        Layout.preferredWidth: notifNum.implicitWidth + Singletons.Globals.px(30)
                         color: Singletons.Globals.primaryColor
                         radius: height
 

@@ -11,7 +11,7 @@ import "widgets" as Widgets
 
 Item {
     id: root
-    height: Singletons.Globals.expanded ? 50 : 0
+    height: Singletons.Globals.expanded ? Singletons.Globals.px(50) : 0
     readonly property Rectangle mainPanel: squiggly.mainPanel
 
     Widgets.SquigglyBar {
@@ -22,7 +22,7 @@ Item {
 
         content: Item {
             anchors.verticalCenter: parent.verticalCenter
-            height: 30
+            height: Singletons.Globals.px(30)
             width: parent.width
 
             Rectangle {
@@ -39,7 +39,7 @@ Item {
                     verticalAlignment: Text.AlignVCenter
                     anchors.horizontalCenter: parent.horizontalCenter
                     anchors.verticalCenter: parent.verticalCenter
-                    font.pointSize: 14
+                    font.pointSize: Singletons.Globals.sp(14)
                     font.bold: true
                 }
             }
@@ -58,7 +58,7 @@ Item {
                     anchors.verticalCenter: parent.verticalCenter
                     verticalAlignment: Text.AlignVCenter
                     font.bold: true
-                    font.pointSize: 14
+                    font.pointSize: Singletons.Globals.sp(14)
                     text: Singletons.Globals.getTime()
                 }
             }
@@ -78,7 +78,7 @@ Item {
                     text: Singletons.Globals.getBatteryPercent()
                     verticalAlignment: Text.AlignVCenter
                     anchors.verticalCenter: parent.verticalCenter
-                    font.pointSize: 14
+                    font.pointSize: Singletons.Globals.sp(14)
                     font.bold: true
                 }
             }

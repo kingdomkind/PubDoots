@@ -12,7 +12,7 @@ Item {
     id: topBar
     property alias mainPanel: topPanel
     property Item content
-    property int invertCornerWidth: 100
+    property int invertCornerWidth: Singletons.Globals.px(100)
 
     onContentChanged: {
         if (content) {

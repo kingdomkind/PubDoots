@@ -13,7 +13,7 @@ import "widgets" as Widgets
 Item {
     id: root
     required property string screen
-    height: Singletons.Globals.notifBarTime != 0 && Singletons.Globals.doNotDisturb == false && Singletons.Globals.expanded == false && screen == Hyprland.focusedMonitor.name ? interiorItem.height + 40 : 0
+    height: Singletons.Globals.notifBarTime != 0 && Singletons.Globals.doNotDisturb == false && Singletons.Globals.expanded == false && screen == Hyprland.focusedMonitor.name ? interiorItem.height + Singletons.Globals.px(40) : 0
 
     MouseArea {
         anchors.fill: parent
@@ -55,12 +55,12 @@ Item {
                     anchors {
                         left: parent.left
                         right: parent.right
-                        margins: 10
+                        margins: Singletons.Globals.px(10)
                     }
 
-                    spacing: 10
+                    spacing: Singletons.Globals.px(10)
                     Image {
-                        height: 32
+                        height: Singletons.Globals.px(32)
                         anchors.verticalCenter: parent.verticalCenter
 
                         width: interiorItem.currentNotif.appIcon != "" ? height : 0

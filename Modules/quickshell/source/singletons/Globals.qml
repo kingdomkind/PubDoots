@@ -9,6 +9,13 @@ Singleton {
     readonly property color backgroundColor: Qt.rgba(15 / 255, 14 / 255, 14 / 255, 0.5)
     readonly property color primaryColor: Qt.rgba(255 / 255, 218 / 255, 182 / 255, 1)
 
+    readonly property real uiScale: (Qt.application && Qt.application.primaryScreen)
+        ? Math.min(
+            Qt.application.primaryScreen.width / 1920,
+            Qt.application.primaryScreen.height / 1080
+        )
+        : 1.0
+
     property bool expanded: false
     property int notifBarTime: 0
     property bool doNotDisturb: false
@@ -103,5 +110,13 @@ Singleton {
 
     function getDate() {
         return Qt.formatDateTime(new Date(), "dd MMM");
+    }
+
+    function px(value) {
+        return Math.round(value * uiScale);
+    }
+
+    function sp(value) {
+        return Math.round(value * uiScale);
     }
 }
