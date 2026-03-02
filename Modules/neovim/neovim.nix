@@ -12,14 +12,14 @@
         enable = true;
         plugins = with pkgs.vimPlugins; [
           # Core plugins
-          (nvim-treesitter.withPlugins (p: [
-            p.lua
-            p.rust
-            p.nix
-            p.css
-            p.markdown
-            p.java
-          ]))
+          # (nvim-treesitter.withPlugins (p: [
+          #   p.lua
+          #   p.rust
+          #   p.nix
+          #   p.css
+          #   p.markdown
+          #   p.java
+          # ]))
           toggleterm-nvim
           lualine-nvim
           snacks-nvim

@@ -64,6 +64,11 @@ Rectangle {
                         leftText.text: "Time Left"
                         rightText.text: Singletons.Globals.getBatteryTimeLeft()
                     }
+                    Components.SplitText {
+                        id: networkText
+                        leftText.text: "Network"
+                        rightText.text: Singletons.Globals.getNetworkState()
+                    }
 
                     Connections {
                         target: Singletons.SecTimer
@@ -73,6 +78,7 @@ Rectangle {
                             wattsText.rightText.text = Singletons.Globals.getBatteryWatts();
                             chargingText.rightText.text = Singletons.Globals.getBatteryCharging();
                             finishTimeText.rightText.text = Singletons.Globals.getBatteryTimeLeft();
+                            networkText.rightText.text = Singletons.Globals.getNetworkState();
                         }
                     }
                 }

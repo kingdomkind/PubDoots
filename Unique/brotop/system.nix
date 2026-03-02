@@ -21,6 +21,7 @@
     ../../Modules/fastfetch/fastfetch.nix
     ../../Modules/sherlock/sherlock.nix
     ../../Modules/groups/screenshot.nix
+    ../../Modules/groups/yazi.nix
     ../../Modules/quickshell/quickshell.nix
     ../../Modules/remote/remote.nix
     ../../Modules/bluetooth/bluetooth.nix
@@ -30,7 +31,7 @@
   networking.hostName = "brotop";
 
   environment.systemPackages = with pkgs; [
-    yazi
+    brightnessctl
     rustup
     localsend
     signal-desktop
@@ -38,10 +39,10 @@
     codex
     btop
     vesktop
-    krita
     firefox
     cosmic-files
     teams-for-linux
+    cloc
   ];
 
   services.udisks2.enable = true;

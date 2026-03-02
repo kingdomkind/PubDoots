@@ -3,6 +3,7 @@ import QtQuick
 import Quickshell
 import Quickshell.Services.UPower
 import Quickshell.Hyprland
+// import Quickshell.Networking
 
 Singleton {
     readonly property color backgroundColor: Qt.rgba(15 / 255, 14 / 255, 14 / 255, 0.5)
@@ -90,6 +91,10 @@ Singleton {
         } else {
             return formatSeconds(UPower.displayDevice.timeToEmpty)
         }
+    }
+
+    function getNetworkState() {
+     //   return toString(Networking.DeviceConnectionState)
     }
 
     function getTime() {

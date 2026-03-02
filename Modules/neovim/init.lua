@@ -325,8 +325,10 @@ end
 
 --> Md Preview
 do
-    require("live-preview").setup({})
-    vim.keymap.set("n", kb.toggle_md_preview, ":LivePreview start<CR>")
+    vim.keymap.set("n", kb.toggle_md_preview, function()
+        require("live-preview").setup({})
+        vim.cmd("LivePreview start")
+    end)
 end
 
 --> Write as Sudo, pure vim
