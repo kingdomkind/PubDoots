@@ -8,12 +8,13 @@ import Quickshell.Services.Notifications
 import Quickshell.Hyprland
 
 import "singletons" as Singletons
+import "components" as Components
 import "widgets" as Widgets
 
 Item {
     id: root
     required property string screen
-    height: Singletons.Globals.notifBarTime != 0 && Singletons.Globals.doNotDisturb == false && Singletons.Globals.expanded == false && screen == Hyprland.focusedMonitor.name ? interiorItem.height + Singletons.Globals.px(40) : 0
+    height: Singletons.Globals.notifBarTime != 0 && Singletons.Globals.doNotDisturb == false && Singletons.Globals.expanded == false && screen == Hyprland.focusedMonitor.name ? interiorItem.height + Singletons.Style.notifBarPadding : 0
 
     MouseArea {
         anchors.fill: parent
@@ -42,7 +43,7 @@ Item {
 
             Rectangle {
                 id: intRect
-                color: Singletons.Globals.primaryColor
+                color: Singletons.Style.primaryColor
                 width: parent.width
                 height: totalNotif.height + radius
                 radius: totalNotif.height * 0.6
@@ -50,39 +51,18 @@ Item {
                 Row {
                     id: totalNotif
                     anchors.verticalCenter: parent.verticalCenter
-                    height: totalTextNotif.implicitHeight
+                    height: notifRow.implicitHeight
                     width: parent.width
                     anchors {
                         left: parent.left
                         right: parent.right
-                        margins: Singletons.Globals.px(10)
+                        margins: Singletons.Style.spacingSm
                     }
 
-                    spacing: Singletons.Globals.px(10)
-                    Image {
-                        height: Singletons.Globals.px(32)
-                        anchors.verticalCenter: parent.verticalCenter
-
-                        width: interiorItem.currentNotif.appIcon != "" ? height : 0
-                        //source: Quickshell.iconPath(interiorItem.currentNotif?.appIcon, "image-missing")
-                        source: interiorItem.currentNotif.appIcon
-                    }
-
-                    Column {
-                        id: totalTextNotif
+                    Components.NotificationRow {
+                        id: notifRow
                         width: parent.width
-                        Text {
-                            text: interiorItem.currentNotif.appName
-                            font.weight: Font.Medium
-                        }
-                        Text {
-                            text: interiorItem.currentNotif.body
-                            visible: interiorItem.currentNotif.body != "" ? true : false
-                        }
-                        Text {
-                            text: interiorItem.currentNotif.summary
-                            visible: interiorItem.currentNotif.summary != "" ? true : false
-                        }
+                        notification: interiorItem.currentNotif
                     }
                 }
             }

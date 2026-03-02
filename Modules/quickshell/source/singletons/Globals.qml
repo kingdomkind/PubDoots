@@ -6,9 +6,6 @@ import Quickshell.Hyprland
 // import Quickshell.Networking
 
 Singleton {
-    readonly property color backgroundColor: Qt.rgba(15 / 255, 14 / 255, 14 / 255, 0.5)
-    readonly property color primaryColor: Qt.rgba(255 / 255, 218 / 255, 182 / 255, 1)
-
     readonly property real uiScale: (Qt.application && Qt.application.primaryScreen)
         ? Math.min(
             Qt.application.primaryScreen.width / 1920,

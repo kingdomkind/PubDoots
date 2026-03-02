@@ -48,4 +48,21 @@
 
   services.udisks2.enable = true;
   services.gvfs.enable = true;
+
+  services.logind.settings.Login = {
+    HandleLidSwitch = "ignore";
+    HandleLidSwitchExternalPower = "ignore";
+    HandleLidSwitchDocked = "ignore";
+  };
+
+  systemd.services.disable-acpi-wake-sources = {
+    description = "Disable problematic ACPI wake sources";
+    wantedBy = [ "multi-user.target" ];
+    serviceConfig = {
+      Type = "oneshot";
+      ExecStart = pkgs.writeShellScript "disable-acpi-wake-sources" ''
+        echo LID > /proc/acpi/wakeup
+      '';
+    };
+  };
 }
