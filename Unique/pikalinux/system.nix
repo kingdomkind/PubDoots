@@ -37,7 +37,6 @@
   environment.systemPackages = with pkgs; [
     yazi
     rustup
-    localsend
     signal-desktop
     unzip
     codex
@@ -59,6 +58,8 @@
     dino
     discordchatexporter-desktop
   ];
+
+  programs.localsend.enable = true;
 
   services.flatpak = {
     enable = true;

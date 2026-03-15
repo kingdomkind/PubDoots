@@ -1,10 +1,12 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    wayfreeze
+    # wayfreeze
     satty
-    grim
-    slurp
+    # grim
+    # slurp
+    killall
+    grimblast
     wl-clipboard
   ];
 }

@@ -81,10 +81,10 @@ local transparent_segments = {}
 
 local function set_transparent(groups)
     if custom.visual.transparent == true then
-    for _, v in ipairs(groups) do
-        vim.api.nvim_set_hl(0, v, { bg = "NONE" })
+        for _, v in ipairs(groups) do
+            vim.api.nvim_set_hl(0, v, { bg = "NONE" })
+        end
     end
-end
 end
 
 
@@ -115,7 +115,8 @@ do
         "rust_analyzer",
         "nixd",
         "clangd",
-        "emmylua_ls"
+        "emmylua_ls",
+        "svelte",
     }
 
     for _, lsp in ipairs(lsps) do
@@ -133,7 +134,13 @@ end
 
 --> Better Syntax Highlighting, works in conjunction with LSPs
 do
-    -- require("nvim-treesitter").setup({})
+    vim.api.nvim_create_autocmd('FileType', {
+        pattern = { '*' },
+        callback = function()
+            --> Pcall because * is too broad
+            pcall(vim.treesitter.start)
+        end,
+    })
 end
 
 --> Toggleable terminal
@@ -382,7 +389,6 @@ vim.api.nvim_create_autocmd("LspAttach", {
             buffer = args.buf,
             desc = "Show variable type"
         })
-
     end,
 })
 

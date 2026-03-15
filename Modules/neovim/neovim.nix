@@ -12,14 +12,7 @@
         enable = true;
         plugins = with pkgs.vimPlugins; [
           # Core plugins
-          # (nvim-treesitter.withPlugins (p: [
-          #   p.lua
-          #   p.rust
-          #   p.nix
-          #   p.css
-          #   p.markdown
-          #   p.java
-          # ]))
+          nvim-treesitter.withAllGrammars
           toggleterm-nvim
           lualine-nvim
           snacks-nvim
@@ -62,6 +55,7 @@
         nixfmt
         llvmPackages_20.clang-tools
         emmylua-ls
+        svelte-language-server
       ];
 
       xdg.configFile."nvim/init.lua".source = config.lib.file.mkOutOfStoreSymlink (
