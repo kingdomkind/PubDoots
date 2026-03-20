@@ -1,4 +1,10 @@
-{ pkgs, userName, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  userName,
+  ...
+}:
 {
   imports = [ ];
 
@@ -22,7 +28,15 @@
   boot.loader.efi.canTouchEfiVariables = true;
 
   boot.kernelPackages = pkgs.linuxPackages_zen;
-  networking.networkmanager.enable = true;
+  networking.networkmanager = {
+    enable = true;
+    # Keep /etc/resolv.conf under NixOS control instead of accepting DHCP DNS.
+    dns = "none";
+  };
+  networking.resolvconf.enable = false;
+  environment.etc."resolv.conf".text = lib.concatMapStrings (server: ''
+    nameserver ${server}
+  '') config.networking.nameservers;
   time.timeZone = "Europe/London";
 
   services.xserver.xkb = {

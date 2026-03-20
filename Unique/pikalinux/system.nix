@@ -1,10 +1,4 @@
-{
-  config,
-  pkgs,
-  uniqueDir,
-  userName,
-  ...
-}:
+{ pkgs, uniqueDir, userName, ... }:
 {
   imports = [
     ./hardware-configuration.nix
@@ -57,6 +51,8 @@
     cloc
     dino
     discordchatexporter-desktop
+    telegram-desktop
+    ungoogled-chromium
   ];
 
   programs.localsend.enable = true;
@@ -71,6 +67,13 @@
     ];
     packages = [
       "org.vinegarhq.Sober"
+    ];
+  };
+
+  networking = {
+    nameservers = [
+      "1.1.1.1"
+      "1.0.0.1"
     ];
   };
 
