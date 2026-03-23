@@ -34,7 +34,6 @@
   environment.systemPackages = with pkgs; [
     brightnessctl
     rustup
-    localsend
     signal-desktop
     unzip
     codex
@@ -48,4 +47,5 @@
 
   services.udisks2.enable = true;
   services.gvfs.enable = true;
+  services.logind.lidSwitch = "ignore";
 }
