@@ -62,7 +62,6 @@
 
   users.groups.${userName} = { };
 
-
   services.openssh.enable = true;
   system.stateVersion = "25.11";
 
@@ -72,6 +71,11 @@
       "flakes"
     ];
   };
+
+  systemd.settings.Manager.DefaultTimeoutStopSec = "5s";
+  systemd.user.extraConfig = ''
+    DefaultTimeoutStopSec=5s
+  '';
 
   nix.gc = {
     automatic = true;

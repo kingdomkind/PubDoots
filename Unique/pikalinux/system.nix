@@ -22,6 +22,7 @@
     ../../Modules/groups/remote.nix
     ../../Modules/groups/bluetooth.nix
     ../../Modules/groups/obs.nix
+    ../../Modules/groups/hardenednetwork.nix
 
     ./tablet/tablet.nix
   ];
@@ -53,6 +54,7 @@
     discordchatexporter-desktop
     telegram-desktop
     ungoogled-chromium
+    claude-code
   ];
 
   programs.localsend.enable = true;
