@@ -117,6 +117,7 @@ do
         "clangd",
         "emmylua_ls",
         "svelte",
+        "glslls",
     }
 
     for _, lsp in ipairs(lsps) do

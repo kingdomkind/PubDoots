@@ -56,6 +56,7 @@
         llvmPackages_20.clang-tools
         emmylua-ls
         svelte-language-server
+        glslls
       ];
 
       xdg.configFile."nvim/init.lua".source = config.lib.file.mkOutOfStoreSymlink (
