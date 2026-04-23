@@ -1,14 +1,12 @@
 {
-  config,
   pkgs,
-  uniqueDir,
-  userName,
+  modulesDir,
   ...
 }:
 {
   imports = [
     ./hardware-configuration.nix
-    ../../Modules/groups/base.nix
+    modulesDir.Modules/groups/base.nix
     ../../Modules/groups/zsh.nix
     ../../Modules/groups/shell.nix
     ../../Modules/groups/dark.nix

@@ -1,4 +1,8 @@
-{ pkgs, uniqueDir, userName, ... }:
+{
+  pkgs,
+  modulesDir,
+  ...
+}:
 {
   imports = [
     ./hardware-configuration.nix
@@ -33,13 +37,10 @@
     yazi
     rustup
     signal-desktop
-    unzip
     codex
     btop
     vesktop
-    adwsteamgtk
     steam
-    tor-browser
     krita
     firefox
     mpv
@@ -50,11 +51,8 @@
     libreoffice
     yt-dlp
     cloc
-    dino
     discordchatexporter-desktop
     telegram-desktop
-    ungoogled-chromium
-    claude-code
   ];
 
   programs.localsend.enable = true;

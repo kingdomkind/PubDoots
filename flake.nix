@@ -9,16 +9,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # firefox-addons = {
-    #   url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
-    # arkenfox = {
-    #   url = "github:dwarfmaster/arkenfox-nixos";
-    #   inputs.nixpkgs.follows = "nixpkgs";
-    # };
-
     rose-pine-hyprcursor = {
       url = "github:ndom91/rose-pine-hyprcursor";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -31,13 +21,12 @@
 
   outputs =
     inputs@{
-      self,
       nixpkgs,
       home-manager,
       ...
     }:
     let
-      system = "x86_64-linux";
+      system = builtins.currentSystem;
 
       mkHost =
         hostDir:
@@ -50,27 +39,21 @@
         nixpkgs.lib.nixosSystem {
           inherit system;
 
-          # only needed if your NixOS modules want `inputs`
+          #> Arguments passed to each module
           specialArgs = {
-            inherit inputs modulesDir uniqueDir userName;
+            inherit
+              inputs
+              modulesDir
+              uniqueDir
+              userName
+              ;
           };
 
+          #> Nix files to include
           modules = [
             "${uniqueDir}/system.nix"
             inputs.nix-flatpak.nixosModules.nix-flatpak
             home-manager.nixosModules.home-manager
-
-            (
-              { config, ... }:
-              {
-                home-manager.useGlobalPkgs = true;
-                home-manager.useUserPackages = true;
-
-                home-manager.extraSpecialArgs = {
-                  inherit inputs modulesDir uniqueDir userName;
-                };
-              }
-            )
           ];
         };
     in
