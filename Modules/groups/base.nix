@@ -9,9 +9,10 @@
   imports = [ ];
 
   nixpkgs.config.allowUnfree = true;
+  boot.initrd.systemd.enable = true;
 
   home-manager.users.${userName} = {
-    home.stateVersion = "25.05";
+    home.stateVersion = "26.05";
   };
 
   # Allow home manager to specify the xdg portals

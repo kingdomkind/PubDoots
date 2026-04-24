@@ -22,11 +22,11 @@
     ../../Modules/fastfetch/fastfetch.nix
     ../../Modules/sherlock/sherlock.nix
     ../../Modules/groups/screenshot.nix
-    ../../Modules/quickshell/quickshell.nix
     ../../Modules/groups/remote.nix
     ../../Modules/groups/bluetooth.nix
     ../../Modules/groups/obs.nix
     ../../Modules/groups/hardenednetwork.nix
+    ../../Modules/groups/noctalia.nix
 
     ./tablet/tablet.nix
   ];

@@ -1,0 +1,19 @@
+# ashift - block allocation size
+# autotrim - allows ssds to free flash blocks when they are erased
+# compression - need to specify, not enabled by default
+# atime - don't update last read time on file access, hurts perf
+# xattr=sa - use extended attributes, needed for SElinux etc
+# acltype - use posix ACLs (user/group permissions beyond rwx)
+
+sudo zpool create \
+  -o ashift=12 \
+  -o autotrim=on \
+  -O encryption=aes-256-gcm \
+  -O keyformat=passphrase \
+  -O keylocation=prompt \
+  -O compression=zstd \
+  -O atime=off \
+  -O xattr=sa \
+  -O acltype=posixacl \
+  the_pool_name \
+  /dev/disk/by-id/DISK_B

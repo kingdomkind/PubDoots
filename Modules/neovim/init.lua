@@ -233,7 +233,9 @@ do
     require("neo-tree").setup({
         -- your config here
         filesystem = {
-            use_libuv_file_watcher = true, --> Automatic refresh upon change
+            --> Temporarily commented out to check
+            -- if this was leaking open fds
+            -- use_libuv_file_watcher = true, --> Automatic refresh upon change
             follow_current_file = {
                 enabled = true,            --> When neotree opens, select current file
             },
