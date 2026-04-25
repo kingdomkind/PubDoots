@@ -1,12 +1,11 @@
 {
   pkgs,
-  modulesDir,
   ...
 }:
 {
   imports = [
     ./hardware-configuration.nix
-    modulesDir.Modules/groups/base.nix
+    ../../Modules/groups/base.nix
     ../../Modules/groups/zsh.nix
     ../../Modules/groups/shell.nix
     ../../Modules/groups/dark.nix
@@ -21,7 +20,7 @@
     ../../Modules/sherlock/sherlock.nix
     ../../Modules/groups/screenshot.nix
     ../../Modules/groups/yazi.nix
-    ../../Modules/quickshell/quickshell.nix
+    ../../Modules/groups/noctalia.nix
     ../../Modules/groups/remote.nix
     ../../Modules/groups/bluetooth.nix
     ../../Modules/groups/fingerprint.nix
