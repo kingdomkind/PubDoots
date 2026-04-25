@@ -25,6 +25,8 @@
         wallpaper = {
           enabled = true;
           directory = "/home/${userName}/Pictures/Wallpapers";
+          automationEnabled = true;
+          randomIntervalSec = 10800;
         };
 
         general.animationSpeed = 2;
@@ -51,14 +53,14 @@
                 id = "AudioVisualizer";
                 width = 200;
               }
-              { id = "MediaMini"; }
+              { id = "MediaMini"; maxWidth = 400; }
             ];
             center = [
               { id = "Clock"; }
             ];
             right = [
-              { id = "SystemMonitor"; }
               { id = "Tray"; }
+              { id = "SystemMonitor"; }
               { id = "NotificationHistory"; }
               { id = "Battery"; }
               { id = "Volume"; }

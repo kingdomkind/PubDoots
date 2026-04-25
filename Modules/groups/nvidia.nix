@@ -7,7 +7,7 @@
     powerManagement.finegrained = false;
     open = true;
     nvidiaSettings = true;
-
+    videoAcceleration = true;
     package = config.boot.kernelPackages.nvidiaPackages.stable;
   };
   hardware.graphics = {
