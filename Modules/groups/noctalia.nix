@@ -5,6 +5,8 @@
   ...
 }:
 {
+  services.upower.enable = true;
+
   environment.systemPackages = with pkgs; [
     jq
     brightnessctl
@@ -45,26 +47,34 @@
           position = "top";
           showCapsule = false;
           useSeparateOpacity = true;
+          widgetSpacing = 0;
           widgets = {
             left = [
               { id = "Workspace"; }
-              { id = "WallpaperSelector"; }
+              { id = "SystemMonitor"; }
+              { id = "NotificationHistory"; }
               {
                 id = "AudioVisualizer";
                 width = 200;
               }
-              { id = "MediaMini"; maxWidth = 400; }
+              {
+                id = "MediaMini";
+                maxWidth = 400;
+              }
             ];
             center = [
               { id = "Clock"; }
             ];
             right = [
               { id = "Tray"; }
-              { id = "SystemMonitor"; }
-              { id = "NotificationHistory"; }
-              { id = "Battery"; }
-              { id = "Volume"; }
               { id = "Brightness"; }
+              { id = "Network"; }
+              { id = "Bluetooth"; }
+              { id = "Volume"; }
+              {
+                id = "Battery";
+                alwaysShowPercentage = true;
+              }
               { id = "ControlCenter"; }
             ];
           };
