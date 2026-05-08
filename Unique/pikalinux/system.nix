@@ -26,6 +26,7 @@
     ../../Modules/groups/obs.nix
     ../../Modules/groups/hardenednetwork.nix
     ../../Modules/groups/noctalia.nix
+    ../../Modules/groups/editor.nix
 
     ./tablet/tablet.nix
   ];
@@ -52,7 +53,13 @@
     cloc
     discordchatexporter-desktop
     telegram-desktop
+    distrobox
   ];
+
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+  };
 
   programs.localsend.enable = true;
 
@@ -78,4 +85,5 @@
 
   services.udisks2.enable = true;
   services.gvfs.enable = true;
+  hardware.xpadneo.enable = true;
 }

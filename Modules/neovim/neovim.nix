@@ -53,7 +53,7 @@
         rust-analyzer
         nixd
         nixfmt
-        llvmPackages_20.clang-tools
+        # llvmPackages_21.clang-tools
         emmylua-ls
         svelte-language-server
         glslls
