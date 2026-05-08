@@ -40,7 +40,13 @@
     cosmic-files
     teams-for-linux
     cloc
+    distrobox
   ];
+
+  virtualisation.podman = {
+    enable = true;
+    dockerCompat = true;
+  };
 
   services.udisks2.enable = true;
   services.gvfs.enable = true;
