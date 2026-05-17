@@ -3,12 +3,7 @@ local pl_path = require("pl.path")
 
 ---@return string
 function lib.cwd()
-    return pl_path.abspath(debug.getinfo(2, "S").source:match("^@(.+/)")).."/"
-end
-
----@param globals table
-function lib.init(globals)
-    lib.globals = globals
+    return pl_path.abspath(debug.getinfo(2, "S").source:match("^@(.+/)")) .. "/"
 end
 
 ---@param base table
@@ -18,7 +13,7 @@ function lib.imports(base, paths)
     for _, path in ipairs(paths) do
         local callback, err = loadfile(path)
         assert(callback, "Failed to load file: " .. path .. "\n" .. tostring(err))
-        lib.merge(base, callback()(lib.globals))
+        lib.merge(base, callback()(lib))
     end
 
     return base
@@ -52,4 +47,9 @@ function lib.merge(table1, table2)
     return table1
 end
 
-return lib
+--> Disallow nil indexing
+return setmetatable(lib, {
+    __index = function(_, k)
+        error("[EXIT] Key '" .. tostring(k) .. "' does not exist in lib!", 2)
+    end
+})

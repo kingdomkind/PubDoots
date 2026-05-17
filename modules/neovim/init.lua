@@ -111,6 +111,10 @@ vim.diagnostic.config({
 
 --> Enable and configure LSPs
 do
+    --> Get the default lsp configurations
+    vim.pack.add({
+        "https://github.com/neovim/nvim-lspconfig"
+    })
     local lsps = {
         "rust_analyzer",
         "nixd",
@@ -127,6 +131,11 @@ end
 
 --> Fuzzy Finding
 do
+    vim.pack.add({
+        "https://github.com/nvim-lua/plenary.nvim",
+        "https://github.com/nvim-telescope/telescope-fzf-native.nvim",
+        "https://github.com/nvim-telescope/telescope.nvim"
+    })
     require("telescope").setup({})
     local builtin = require("telescope.builtin")
 
@@ -146,6 +155,9 @@ end
 
 --> Toggleable terminal
 do
+    vim.pack.add({
+        "https://github.com/akinsho/toggleterm.nvim"
+    })
     require("toggleterm").setup({
         shade_terminals = false,
         start_in_insert = false,
@@ -164,6 +176,10 @@ end
 
 --> Top Bar
 do
+    vim.pack.add({
+        "https://github.com/nvim-tree/nvim-web-devicons",
+        "https://github.com/romgrk/barbar.nvim"
+    })
     require("barbar").setup({
         -- your options here
         auto_hide = false,
@@ -184,6 +200,10 @@ end
 
 --> Bottom Bar
 do
+    vim.pack.add({
+        "https://github.com/nvim-tree/nvim-web-devicons",
+        "https://github.com/nvim-lualine/lualine.nvim"
+    })
     require("lualine").setup({
         sections = {
             lualine_a = { "mode" },
@@ -198,6 +218,9 @@ end
 
 --> Autocompletions
 do
+    vim.pack.add({
+        "https://github.com/hrsh7th/nvim-cmp"
+    })
     local cmp = require("cmp")
     cmp.setup({
         window = {
@@ -221,6 +244,9 @@ do
 end
 
 do
+    vim.pack.add({
+        "https://github.com/folke/snacks.nvim"
+    })
     require("snacks").setup({
         indent = {
             enabled = true
@@ -230,12 +256,16 @@ end
 
 --> File browser tree
 do
+    vim.pack.add({
+        "https://github.com/nvim-lua/plenary.nvim",
+        "https://github.com/MunifTanjim/nui.nvim",
+        "https://github.com/nvim-tree/nvim-web-devicons",
+        "https://github.com/nvim-neo-tree/neo-tree.nvim"
+    })
     require("neo-tree").setup({
         -- your config here
         filesystem = {
-            --> Temporarily commented out to check
-            -- if this was leaking open fds
-            -- use_libuv_file_watcher = true, --> Automatic refresh upon change
+            use_libuv_file_watcher = true, --> Automatic refresh upon change
             follow_current_file = {
                 enabled = true,            --> When neotree opens, select current file
             },
@@ -263,6 +293,9 @@ end
 
 --> Commenting and Uncommenting Code
 do
+    vim.pack.add({
+        "https://github.com/nvim-mini/mini.comment"
+    })
     require("mini.comment").setup({
         options = {
             ignore_blank_line = true,
@@ -278,9 +311,11 @@ end
 
 --> Code Formatting
 do
+    vim.pack.add({
+        "https://github.com/stevearc/conform.nvim"
+    })
     local conform = require("conform")
     conform.setup({})
-
     vim.keymap.set("n", kb.format_code, function()
         conform.format({ async = true, lsp_fallback = true })
     end)
@@ -288,6 +323,9 @@ end
 
 --> Start Screen
 do
+    vim.pack.add({
+        "https://github.com/nvim-mini/mini.starter"
+    })
     require("mini.starter").setup({
         autoopen = true,
         header = [[
@@ -333,16 +371,11 @@ do
     })
 end
 
---> Md Preview
-do
-    vim.keymap.set("n", kb.toggle_md_preview, function()
-        require("live-preview").setup({})
-        vim.cmd("LivePreview start")
-    end)
-end
-
 --> Write as Sudo, pure vim
 do
+    vim.pack.add({
+        "https://github.com/lambdalisue/vim-suda"
+    })
     --> Auto ask sudo when required
     vim.g.suda_smart_edit = 1
     vim.cmd("cabbrev sudow SudaWrite")
@@ -350,6 +383,9 @@ end
 
 --> Fix Delete
 do
+    vim.pack.add({
+        "https://github.com/gbprod/cutlass.nvim"
+    })
     require("cutlass").setup({
         cut_key = "x",
         override_del = true,
@@ -358,6 +394,9 @@ end
 
 --> Colour Scheme
 do
+    vim.pack.add({
+        "https://github.com/catppuccin/nvim"
+    })
     require("catppuccin").setup({
         flavour = "mocha",
         transparent_background = custom.visual.transparent,
