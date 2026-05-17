@@ -13,11 +13,11 @@ globals.uniqued = "unique/" .. hostname .. "/"
 globals.modulesd = "modules/"
 globals.uid = 1000
 globals.gid = 1000
-globals.mode = tonumber("644", 8) 
+globals.mode = tonumber("644", 8)
 
 lib.merge(lib, globals)
 
-local result = loadfile("unique/" .. hostname .. "/system.lua")()(lib)
+local result = loadfile(lib.uniqued .. "system.lua")()(lib)
 
 --> Debug dump
 ---@diagnostic disable-next-line

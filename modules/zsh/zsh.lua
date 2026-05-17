@@ -5,7 +5,7 @@ return function(lib)
 # Aliases
 alias rm='rm -I'
 alias grep='grep --color=auto'
-alias build-config="(cd ]] .. pl.abspath(lib.modulesd) .. [[ && ./reload.sh)"
+alias build-config="(cd ]] .. pl.abspath(lib.dootsd) .. [[ && ./reload.sh)"
 alias vi="nvim"
 alias sudo="sudo "
 alias space="du -sh ./ ; du -sh ./*"
