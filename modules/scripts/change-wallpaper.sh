@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # set -x
 
-noctalia-shell ipc call wallpaper random
+qs -c noctalia-shell ipc call wallpaper random
 # if [ "$XDG_CURRENT_DESKTOP" == "Hyprland" ]; then
 # 	SCRIPT_DIRECTORY="$(dirname "$(readlink -f "${BASH_SOURCE[0]}")")"
 # 	WALLPAPER_FILE="/tmp/wallpaper.txt"

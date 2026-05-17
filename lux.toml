@@ -1,0 +1,19 @@
+package = "PubDoots"
+version = "0.1.0"
+lua = ">=5.1"
+
+[description]
+summary = ""
+maintainer = ""
+labels = [ "" ]
+license = "Apache-2.0"
+
+[dependencies]
+lua-cjson = "2.1.0-1"
+penlight = "1.15.0-1"
+
+[run]
+args = [ "main.lua" ]
+
+[build]
+type = "builtin"

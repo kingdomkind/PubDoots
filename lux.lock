@@ -1,0 +1,72 @@
+{
+  "version": "1.0.0",
+  "dependencies": {
+    "rocks": {
+      "611b19eca413e8557258c177563402d31094cde79f82d340f5648d2ac8f3b8a1": {
+        "name": "luafilesystem",
+        "version": "1.9.0-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [],
+        "constraint": null,
+        "binaries": [],
+        "source": "luarocks_rockspec+https://luarocks.org/",
+        "source_url": {
+          "type": "git",
+          "url": "https://github.com/lunarmodules/luafilesystem",
+          "ref": "v1_9_0"
+        },
+        "hashes": {
+          "rockspec": "sha256-Mrv7QKI6EAY6jzMrh0VWAZIy5KAem82cDPtCIRji4ck=",
+          "source": "sha256-xoNJra/yqxRG11TePcUKrAUU6cwypGnXIoLKZXNaoW0="
+        }
+      },
+      "b7fa2fc76ac7b515ab09c4982a9805528218639fda3b3a86a49825f3cf42bd0b": {
+        "name": "lua-cjson",
+        "version": "2.1.0-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [],
+        "constraint": "==2.1.0",
+        "binaries": [
+          "lua2json",
+          "json2lua"
+        ],
+        "source": "luarocks_rockspec+https://luarocks.org/",
+        "source_url": {
+          "type": "url",
+          "url": "https://luarocks.org/lua-cjson-2.1.0-1.src.rock"
+        },
+        "hashes": {
+          "rockspec": "sha256-L/6Yon2ek6NnEeifAy3qsnT2cMCB8IdaCgVeu3+1lvs=",
+          "source": "sha256-23r4ScVV0aR09yn+Sla1Uw6b57JHSet6fEdKfHIHuXI="
+        }
+      },
+      "e7dcfe8bbcd95b4c200200d107a8f36dc03aacdcab9995297e18b60b7c7fe1f8": {
+        "name": "penlight",
+        "version": "1.15.0-1",
+        "pinned": false,
+        "opt": false,
+        "dependencies": [
+          "611b19eca413e8557258c177563402d31094cde79f82d340f5648d2ac8f3b8a1"
+        ],
+        "constraint": "==1.15.0",
+        "binaries": [],
+        "source": "luarocks_rockspec+https://luarocks.org/",
+        "source_url": {
+          "type": "git",
+          "url": "https://github.com/lunarmodules/penlight.git",
+          "ref": "1.15.0"
+        },
+        "hashes": {
+          "rockspec": "sha256-blt3sqlz+76U8RAtPtfvEqw4+VACI90TFHn+fTcQlVQ=",
+          "source": "sha256-yEkzr4v8avygFxp+NUvffg2fRxQJWTpRdIvluh/QBpY="
+        }
+      }
+    },
+    "entrypoints": [
+      "b7fa2fc76ac7b515ab09c4982a9805528218639fda3b3a86a49825f3cf42bd0b",
+      "e7dcfe8bbcd95b4c200200d107a8f36dc03aacdcab9995297e18b60b7c7fe1f8"
+    ]
+  }
+}
