@@ -1,5 +1,5 @@
 {
-  "Revision": "0.6.6.2",
+  "Revision": "0.6.7",
   "Profiles": [
     {
       "Tablet": "Huion H610 Pro V2",
@@ -11,10 +11,10 @@
       "Filters": [],
       "AbsoluteModeSettings": {
         "Display": {
-          "Width": 3840.0,
-          "Height": 2160.0,
-          "X": 1920.0,
-          "Y": 1080.0,
+          "Width": 2887.0,
+          "Height": 1620.0,
+          "X": 1443.5,
+          "Y": 810.0,
           "Rotation": 0.0
         },
         "Tablet": {
@@ -155,8 +155,10 @@
         "MouseButtons": [],
         "MouseScrollUp": null,
         "MouseScrollDown": null,
+        "WheelBindings": [],
         "DisablePressure": false,
-        "DisableTilt": false
+        "DisableTilt": false,
+        "EnableDragBindings": false
       }
     }
   ],

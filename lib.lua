@@ -15,16 +15,15 @@ end
 ---@return table
 function lib.imports(base, paths)
     for _, path in ipairs(paths) do
-        local callback, err
-        local additional_args
         if type(path) == "table" then
-            callback, err = loadfile(path[1])
-            additional_args = path[2]
+            local callback, err = loadfile(path[1])
+            assert(callback, "Failed to load file: " .. path[1] .. "\n" .. tostring(err))
+            lib.merge(base, callback()(lib, path[2]))
         else
-            callback, err = loadfile(path)
+            local callback, err = loadfile(path)
+            assert(callback, "Failed to load file: " .. path .. "\n" .. tostring(err))
+            lib.merge(base, callback()(lib))
         end
-        assert(callback, "Failed to load file: " .. path .. "\n" .. tostring(err))
-        lib.merge(base, callback()(lib, additional_args))
     end
 
     return base
@@ -62,12 +61,15 @@ end
 
 --- Prevents nil accessing
 ---@param to_bar table The table you want barred
+---@return table
 function lib.bar(to_bar)
     setmetatable(to_bar, {
         __index = function(_, k)
             error("[EXIT] Key '" .. tostring(k) .. "' does not exist in lib!", 2)
         end
     })
+
+    return to_bar
 end
 
 return lib.bar(lib)
