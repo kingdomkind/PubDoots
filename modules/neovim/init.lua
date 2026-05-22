@@ -119,7 +119,7 @@ do
         "rust_analyzer",
         "nixd",
         "clangd",
-        "emmylua_ls",
+        "lua_ls",
         "svelte",
         "glslls",
     }
@@ -217,31 +217,25 @@ do
 end
 
 --> Autocompletions
-do
-    vim.pack.add({
-        "https://github.com/hrsh7th/nvim-cmp"
-    })
-    local cmp = require("cmp")
-    cmp.setup({
-        window = {
-            completion = cmp.config.window.bordered(),
-            documentation = cmp.config.window.bordered(),
-        },
-        mapping = cmp.mapping.preset.insert({
-            [kb.prev_completion] = cmp.mapping.select_prev_item(),
-            [kb.next_completion] = cmp.mapping.select_next_item(),
-            [kb.abort_completion] = cmp.mapping.abort(),
-            [kb.confirm_completion] = cmp.mapping.confirm({ select = true }),
-            ["<Up>"] = cmp.config.disable,
-            ["<Down>"] = cmp.config.disable,
-        }),
-        sources = cmp.config.sources({
-            { name = "nvim_lsp" },
-        }, {
-            { name = "buffer" },
-        })
-    })
+vim.o.autocomplete = true
+vim.o.complete = "o"
+vim.o.completeopt = "menuone,popup,fuzzy,noinsert"
+local function pum()
+    return vim.fn.pumvisible() == 1
 end
+
+vim.keymap.set("i", "<Up>", function()
+    return vim.fn.pumvisible() == 1 and "<C-e><Up>" or "<Up>"
+end, { expr = true, silent = true })
+
+vim.keymap.set("i", "<Down>", function()
+    return vim.fn.pumvisible() == 1 and "<C-e><Down>" or "<Down>"
+end, { expr = true, silent = true })
+
+--> Enter should always make a newline, never accept a completion
+vim.keymap.set("i", "<CR>", function()
+    return pum() and "<C-e><CR>" or "<CR>"
+end, { expr = true, silent = true })
 
 do
     vim.pack.add({
@@ -422,15 +416,31 @@ do
 end
 
 --> LSP specific binds, must be created on attachment
+-- vim.api.nvim_create_autocmd("LspAttach", {
+--     callback = function(args)
+--         local client = vim.lsp.get_client_by_id(args.data.client_id)
+
+--         --> Show hovered type
+--         vim.keymap.set("n", kb.show_hover_type, vim.lsp.buf.hover, {
+--             buffer = args.buf,
+--             desc = "Show variable type"
+--         })
+--     end,
+-- })
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
-        local client = vim.lsp.get_client_by_id(args.data.client_id)
+        local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
 
         --> Show hovered type
         vim.keymap.set("n", kb.show_hover_type, vim.lsp.buf.hover, {
             buffer = args.buf,
             desc = "Show variable type"
         })
+
+        --> Enable native LSP completion integration
+        if client:supports_method("textDocument/completion") then
+            vim.lsp.completion.enable(true, client.id, args.buf)
+        end
     end,
 })
 
