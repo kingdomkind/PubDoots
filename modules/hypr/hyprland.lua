@@ -5,6 +5,7 @@ local terminal = "kitty"
 hl.on("hyprland.start", function()
     hl.exec_cmd(noctalia)
     hl.exec_cmd("signal-desktop")
+    hl.exec_cmd("otd-daemon")
 end)
 
 --> Environment Vars
@@ -92,7 +93,6 @@ hl.bind(a .. "+Q", hl.dsp.exec_cmd(terminal))
 hl.bind(a .. "+N", hl.dsp.exec_cmd("alacritty"))
 hl.bind(a .. "+A", hl.dsp.exec_cmd("cosmic-files"))
 hl.bind(a .. "+X", hl.dsp.exec_cmd(terminal .. " -e yazi"))
-hl.bind(a .. "+T", hl.dsp.exec_cmd("flatpak run com.rtosta.zapzap"))
 hl.bind(a .. "+U", hl.dsp.exec_cmd("env QT_SCALE_FACTOR=1.5 krita"))
 hl.bind(a .. "+PAGE_UP", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"), { repeating = true })
 hl.bind(a .. "+PAGE_DOWN", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"), { repeating = true })
@@ -100,7 +100,7 @@ hl.bind(a .. "+PAGE_DOWN", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK
 --> Compositor binds
 hl.bind(a .. "+C", hl.dsp.window.close())
 hl.bind(a .. "+F", hl.dsp.window.fullscreen())
-hl.bind(b .. "+F", hl.dsp.window.fullscreen_state({ internal = 0, client = 2 }))
+hl.bind(b .. "+F", hl.dsp.window.fullscreen_state({ internal = 0, client = 2, action = "toggle" }))
 hl.bind(a .. "+bracketright", hl.dsp.layout("togglesplit"))
 hl.bind(a .. "+bracketleft",  hl.dsp.layout("swapsplit"))
 hl.bind(a .. "+V", hl.dsp.window.float({ action = "toggle" }))
@@ -120,14 +120,10 @@ hl.bind(b .. "+S",
 
 --> Noctalia Binds
 local function toggle_noctalia()
-    local handle = io.popen(
-        [[qs -c noctalia-shell ipc call state all | jq -r '.state.barVisible']]
-    )
-
+    local handle = io.popen("qs -c noctalia-shell ipc call state all | jq -r '.state.barVisible'")
     if handle == nil then
         return
     end
-
     local open = handle:read("*a"):gsub("%s+$", "")
     handle:close()
 

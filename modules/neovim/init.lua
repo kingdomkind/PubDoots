@@ -38,7 +38,7 @@ local custom = {
         prev_completion = "<A-z>",
         next_completion = "<A-x>",
         abort_completion = "<A-b>",
-        confirm_completion = "<Tab>",
+        accept_completion = "<Tab>",
         escape_in_terminal = "<A-Esc>"
     },
 }
@@ -93,16 +93,18 @@ vim.diagnostic.config({
     float = {
         border = "rounded",
         focusable = false,
-        source = "always",
+        source = true,
         header = "",
         prefix = "",
         max_width = 80,
+        wrap = true,
     },
 
     virtual_text = {
         prefix = "●",
         spacing = 2,
     },
+
     signs = true,
     underline = true,
     update_in_insert = false,
@@ -217,26 +219,46 @@ do
 end
 
 --> Autocompletions
-vim.o.autocomplete = true
-vim.o.complete = "o"
-vim.o.completeopt = "menuone,popup,fuzzy,noinsert"
-local function pum()
-    return vim.fn.pumvisible() == 1
+do
+    vim.o.autocomplete = true
+    vim.o.complete = "o"
+    vim.o.completeopt = "menuone,popup,fuzzy,noinsert"
+    local function pum()
+        return vim.fn.pumvisible() == 1
+    end
+
+    --> Clear hard-coded keybinds
+    vim.keymap.set("i", "<Up>", function()
+        return pum() and "<C-e><Up>" or "<Up>"
+    end, { expr = true, silent = true })
+
+    vim.keymap.set("i", "<Down>", function()
+        return pum() and "<C-e><Down>" or "<Down>"
+    end, { expr = true, silent = true })
+
+    vim.keymap.set("i", "<CR>", function()
+        return pum() and "<C-e><CR>" or "<CR>"
+    end, { expr = true, silent = true })
+
+    --> Set new keybinds
+    vim.keymap.set("i", kb.next_completion, function()
+        return pum() and "<C-n>" or nil
+    end, { expr = true, silent = true })
+
+    vim.keymap.set("i", kb.prev_completion, function()
+        return pum() and "<C-p>" or nil
+    end, { expr = true, silent = true })
+
+    vim.keymap.set("i", kb.accept_completion, function()
+        return pum() and "<C-y>" or "<Tab>"
+    end, { expr = true, silent = true })
+
+    vim.keymap.set("i", kb.abort_completion, function()
+        return pum() and "<C-e>" or nil
+    end, { expr = true, silent = true })
 end
 
-vim.keymap.set("i", "<Up>", function()
-    return vim.fn.pumvisible() == 1 and "<C-e><Up>" or "<Up>"
-end, { expr = true, silent = true })
-
-vim.keymap.set("i", "<Down>", function()
-    return vim.fn.pumvisible() == 1 and "<C-e><Down>" or "<Down>"
-end, { expr = true, silent = true })
-
---> Enter should always make a newline, never accept a completion
-vim.keymap.set("i", "<CR>", function()
-    return pum() and "<C-e><CR>" or "<CR>"
-end, { expr = true, silent = true })
-
+--> Indent line
 do
     vim.pack.add({
         "https://github.com/folke/snacks.nvim"
@@ -261,7 +283,8 @@ do
         filesystem = {
             use_libuv_file_watcher = true, --> Automatic refresh upon change
             follow_current_file = {
-                enabled = true,            --> When neotree opens, select current file
+                --> Don't follow the current file, because it complains when that file actually isn't a real buffer
+                enabled = false,
             },
             filtered_items = {
                 visible = true,
@@ -416,17 +439,6 @@ do
 end
 
 --> LSP specific binds, must be created on attachment
--- vim.api.nvim_create_autocmd("LspAttach", {
---     callback = function(args)
---         local client = vim.lsp.get_client_by_id(args.data.client_id)
-
---         --> Show hovered type
---         vim.keymap.set("n", kb.show_hover_type, vim.lsp.buf.hover, {
---             buffer = args.buf,
---             desc = "Show variable type"
---         })
---     end,
--- })
 vim.api.nvim_create_autocmd("LspAttach", {
     callback = function(args)
         local client = assert(vim.lsp.get_client_by_id(args.data.client_id))
