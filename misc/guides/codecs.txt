@@ -1,0 +1,21 @@
+#> https://old.reddit.com/r/VideoEditing/comments/103fa1/explain_the_difference_between_a_container_and_a/, stepcut251
+There are really three things you want to talk about, container, compression format, and codec.
+
+A container is a wrapper that contains other data and describes how they relate. For example, .MOV (aka QuickTime) and .AVI are container formats. They general contain a number of audio and video streams.
+
+The compression format describes how to compress a data stream. For example, the H.264 is a video compression format. AC3 is a audio compression format. To get a movie with sound, you might put an H.264 video stream and AC3 audio stream inside an a .MOV container.
+
+A codec (short for compressor/decompressor) is a program/device/etc which can encode and decode an compressed data format. So, LAME would be an MP3 codec, because it compresses audio streams to MP3. If you have ever tried to play a video and not been able to see the video stream, you may have been told that you don't have the right codec installed. Meaning, you do not have the software installed that can decompress that stream.
+
+Now, here is where things get confusing. While codec is technically the software/device that does the compression and decompression, it is often used to refer to the compression format itself.
+
+Also, some things sound the same, but are not. For example, MP4 generally refers to the MPEG-4 container format. MP3 refers to the MPEG4 Layer 3 audio compression format. I believe that .MP3 files themselves are containerless. Additionally, you can put a MP3 in an MP4 container.
+
+So, in summary:
+
+container - holds a bunch of data streams and describes how they are related
+
+compression format - describes how the data stream is encoded
+
+codec - the software/plugin/hardware/etc that actually does the compression/decompression
+

@@ -14,7 +14,8 @@ alias vi="nvim"
 alias sudo="sudo "
 alias space="du -sh ./ ; du -sh ./*"
 
-alias ls="eza --icons=always --colour=always"
+#> Octal permissions will only show in long view, hence why we can globally apply it
+alias ls="eza --icons=always --colour=always --octal-permissions"
 alias edit='cd ]] .. pl.abspath(lib.dootsd) .. [['
 alias editm='cd ]] .. pl.abspath(lib.modulesd) .. [['
 alias editu='cd ]] .. pl.abspath(lib.uniqued) .. [['

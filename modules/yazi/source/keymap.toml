@@ -1,0 +1,14 @@
+#> Thx, https://github.com/sxyazi/yazi/discussions/2153#discussioncomment-13465823
+[[mgr.prepend_keymap]]
+on = "<A-d>"
+run = '''shell --
+    ripdrag --no-click --and-exit --icon-size 64 --target --all "$@" | while read filepath; do cp -nR "$filepath" .; done
+'''
+desc = "Drag-n-drop files from and to Yazi"
+
+[[mgr.prepend_keymap]]
+on = "<A-S-d>"
+run = '''shell --
+    ripdrag --no-click --and-exit --icon-size 64 --target --all "$@" | while read filepath; do cp -fR "$filepath" .; done
+'''
+desc = "Drag-n-drop files to and from Yazi (overwrite)"

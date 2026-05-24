@@ -5,6 +5,7 @@ return function(lib)
         lib.modulesd .. "neovim/neovim.lua",
         lib.modulesd .. "zsh/zsh.lua",
         lib.modulesd .. "noctalia/noctalia.lua",
+        lib.modulesd .. "yazi/yazi.lua",
         { lib.modulesd .. "hypr/hypr.lua", { extension = lib.cwd() .. "hyprext.lua" } },
 
         lib.uniqued .. "tablet/tablet.lua",
