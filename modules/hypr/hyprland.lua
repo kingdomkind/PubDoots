@@ -1,11 +1,10 @@
-local noctalia = "qs -c noctalia-shell"
 local terminal = "kitty"
+local GAPS_OUT = 50;
 
 --> Exec Onces
 hl.on("hyprland.start", function()
-    hl.exec_cmd(noctalia)
+    hl.exec_cmd("noctalia")
     hl.exec_cmd("signal-desktop")
-    hl.exec_cmd("otd-daemon")
 end)
 
 --> Environment Vars
@@ -17,7 +16,7 @@ hl.env("GTK_THEME", "Adwaita:dark")
 hl.config({
     general = {
         gaps_in = 0,
-        gaps_out = 0,
+        gaps_out = GAPS_OUT,
         border_size = 0,
         allow_tearing = false,
         layout = "dwindle",
@@ -102,7 +101,7 @@ hl.bind(a .. "+C", hl.dsp.window.close())
 hl.bind(a .. "+F", hl.dsp.window.fullscreen())
 hl.bind(b .. "+F", hl.dsp.window.fullscreen_state({ internal = 0, client = 2, action = "toggle" }))
 hl.bind(a .. "+bracketright", hl.dsp.layout("togglesplit"))
-hl.bind(a .. "+bracketleft",  hl.dsp.layout("swapsplit"))
+hl.bind(a .. "+bracketleft", hl.dsp.layout("swapsplit"))
 hl.bind(a .. "+V", hl.dsp.window.float({ action = "toggle" }))
 hl.bind(c .. "+M", hl.dsp.exit())
 hl.bind(a .. "+right", hl.dsp.window.resize({ x = 30, y = 0, relative = true }), { repeating = true })
@@ -120,7 +119,7 @@ hl.bind(b .. "+S",
 
 --> Noctalia Binds
 local function toggle_noctalia()
-    local handle = io.popen("qs -c noctalia-shell ipc call state all | jq -r '.state.barVisible'")
+    local handle = io.popen("noctalia msg status  | jq '.barVisible'")
     if handle == nil then
         return
     end
@@ -134,7 +133,7 @@ local function toggle_noctalia()
             },
         })
 
-        hl.exec_cmd("qs -c noctalia-shell ipc call bar hideBar")
+        hl.exec_cmd("noctalia msg bar-hide")
     else
         hl.config({
             general = {
@@ -142,28 +141,40 @@ local function toggle_noctalia()
             },
         })
 
-        hl.exec_cmd("qs -c noctalia-shell ipc call bar showBar")
+        hl.exec_cmd("noctalia msg bar-show")
     end
 end
 
-hl.bind(a .. "+SPACE", hl.dsp.exec_cmd(noctalia .. " ipc call launcher toggle"))
-hl.bind(a .. "+R", hl.dsp.exec_cmd(noctalia .. "  ipc call wallpaper random"))
-hl.bind(c .. "+0", hl.dsp.exec_cmd(noctalia .. " ipc call sessionMenu toggle"))
+hl.bind(a .. "+SPACE", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"))
+hl.bind(a .. "+R", hl.dsp.exec_cmd("noctalia msg wallpaper-random"))
+hl.bind(c .. "+0", hl.dsp.exec_cmd("noctalia msg panel-toggle session"))
 hl.bind(a .. "+E", toggle_noctalia)
 
 --> Workspace Binds
+local WORKSPACE_PER_MONITOR_COUNT = 10;
+
 local function map_workspace(workspace)
     local monitors = hl.get_monitors()
     for i, m in ipairs(monitors) do
         if m.focused then
-            return workspace + ((i - 1) * 10)
+            return workspace + ((i - 1) * WORKSPACE_PER_MONITOR_COUNT)
         end
     end
 end
 
-for i, m in ipairs(hl.get_monitors()) do
-    hl.workspace_rule({ workspace = map_workspace(i), monitor = m.name, default = true })
-end
+-- This sets the defualt workspace per monitor
+-- hl.get_monitors() doesn't return anything on config load, it's empty
+-- Instead, we listen to monitor added and manually set the target workspace to the monitor
+hl.on("monitor.added", function(monitor)
+    hl.dispatch(hl.dsp.focus({
+        monitor = monitor.name,
+    }))
+
+    hl.dispatch(hl.dsp.focus({
+        workspace = tostring(map_workspace(1)),
+        on_current_monitor = true,
+    }))
+end)
 
 for i = 1, 9 do
     hl.bind(a .. "+" .. i, function()
@@ -184,7 +195,6 @@ end
 --> Scratchpad Binds
 local scratchpad_apps = {
     { "signal-desktop", "signal" },
-    { "vesktop", "vesktop" }
 }
 
 hl.bind(a .. "+Z", hl.dsp.workspace.toggle_special("scratchpad"))

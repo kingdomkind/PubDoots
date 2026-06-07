@@ -2,6 +2,8 @@ local pl = require("pl.path")
 
 return function(lib)
     local body = [[
+#> Exports
+export PATH="/home/pika/.bun/bin:$PATH"
 
 #> Shows username if root, else, only path
 PS1='[%(!.%n .)%1~]$ '
