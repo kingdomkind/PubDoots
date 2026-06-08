@@ -1,0 +1,15 @@
+#> Requires
+
+Requires can either be used as
+    A) A clause 
+
+    B) An expression
+        eg. if constexpr (requires { expression; })
+        
+    https://www.youtube.com/watch?v=k1I4ZoB50_I
+    https://www.youtube.com/watch?v=tc0hVIOJk_U
+    https://www.youtube.com/watch?v=dR64GQb4AGo
+    https://stackoverflow.com/questions/47144396/if-constexpr-and-requires-expression-for-ad-hoc-concepts-checking
+
+    you will see requires requires {} because the first requires is the statement / clause, the latter is the expression.
+    I could do requires (myfunction()) given that myfunction is constexpr
