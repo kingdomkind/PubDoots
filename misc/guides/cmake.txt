@@ -1,0 +1,9 @@
+Cmake revolves around targets, of which there are two primary types:
+    -> Libraries
+        -> add_library(name, <shared, static>, imported?)
+    -> Executables
+        -> add_executable()
+
+
+Commands revolve around modifying targets
+

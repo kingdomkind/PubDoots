@@ -118,15 +118,9 @@ hl.bind(b .. "+S",
         "grimblast --freeze --filetype ppm save area - | satty --filename - --copy-command \"wl-copy\" --early-exit --fullscreen --initial-tool brush"))
 
 --> Noctalia Binds
+local open = true
 local function toggle_noctalia()
-    local handle = io.popen("noctalia msg status  | jq '.barVisible'")
-    if handle == nil then
-        return
-    end
-    local open = handle:read("*a"):gsub("%s+$", "")
-    handle:close()
-
-    if open == "true" then
+    if open == true then
         hl.config({
             general = {
                 gaps_out = 0,
@@ -134,6 +128,7 @@ local function toggle_noctalia()
         })
 
         hl.exec_cmd("noctalia msg bar-hide")
+        open = false;
     else
         hl.config({
             general = {
@@ -142,6 +137,7 @@ local function toggle_noctalia()
         })
 
         hl.exec_cmd("noctalia msg bar-show")
+        open = true;
     end
 end
 

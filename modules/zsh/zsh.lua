@@ -23,7 +23,7 @@ alias editm='cd ]] .. pl.abspath(lib.modulesd) .. [['
 alias editu='cd ]] .. pl.abspath(lib.uniqued) .. [['
 
 # Start Hyprland if on TTY1
-if [ "$(tty)" = "/dev/tty1" ]; then exec start-hyprland; fi
+if [ "$(tty)" = "/dev/tty1" ]; then exec dbus-run-session start-hyprland; fi
 
 autoload -U colors && colors
 

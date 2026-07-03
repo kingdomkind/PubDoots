@@ -1,0 +1,9 @@
+[aliases]
+tug = ["bookmark", "advance", "--to", "@-"]
+push = ["git", "push", "--bookmark"]
+
+[revsets]
+log = "all()"
+
+[remotes.origin]
+auto-track-bookmarks = "*"
