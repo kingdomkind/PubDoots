@@ -3,6 +3,7 @@ set -e
 cd "$(dirname "$0")"
 
 config=$(lx run)
-
-(cd ../Software/desym && sudo cargo run -- "$(echo "$config" | jq -c '.desym')")
-(cd ../Software/depac && sudo cargo run -- "$(echo "$config" | jq -c '.depac')")
+for generator in desym depac; do
+    echo -e "\033[38;5;208m[NEXT]\033[0m $generator"
+    (cd "../Software/$generator" && sudo cargo run -- "$(echo "$config" | jq -c ".$generator")")
+done

@@ -26,7 +26,6 @@ return function(lib)
                 "dinit",
                 "efibootmgr",
                 "elogind-dinit",
-                "grub",
                 "linux",
                 "linux-firmware",
                 "linux-headers",
