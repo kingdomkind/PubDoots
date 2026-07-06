@@ -1,0 +1,14 @@
+GRUB_DEFAULT=0
+GRUB_TIMEOUT=1
+GRUB_DISTRIBUTOR="Artix"
+GRUB_CMDLINE_LINUX_DEFAULT="loglevel=3 quiet cryptdevice=/dev/nvme0n1p2:decryptdevice root=/dev/mapper/decryptdevice amd_iommu=on vfio-pci.ids=10de:13c0,10de:0fbb pcie_acs_override=downstream,multifunction"
+GRUB_CMDLINE_LINUX=""
+GRUB_PRELOAD_MODULES="part_gpt part_msdos"
+#GRUB_ENABLE_CRYPTODISK=y
+GRUB_TIMEOUT_STYLE=menu
+GRUB_TERMINAL_INPUT=console
+#GRUB_TERMINAL_OUTPUT=console
+GRUB_GFXMODE=640x480
+GRUB_GFXPAYLOAD_LINUX=keep
+GRUB_DISABLE_RECOVERY=true
+GRUB_TOP_LEVEL="/boot/vmlinuz-linux-zen"

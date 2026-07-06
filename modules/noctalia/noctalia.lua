@@ -12,7 +12,7 @@ radius = 0
 start = []
 ]]
 
-    local body = [=[
+    local content = [=[
 # >> Bar <<
 [bar]
 order = [ "Top", "Left", "Bottom", "Right" ]
@@ -107,7 +107,7 @@ lock_keys = false
         desym = {
             files = {
                 [lib.configd .. "noctalia/settings.toml"] = {
-                    source = body,
+                    source = content,
                     uid = lib.uid,
                     gid = lib.gid,
                     mode = lib.mode,

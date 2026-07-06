@@ -87,6 +87,16 @@ export EDITOR=nvim
                     mode = lib.mode,
                 }
             }
+        },
+        depac = {
+            packages = {
+                "eza",
+                "zoxide",
+                "zsh",
+                "zsh-autosuggestions",
+                "zsh-syntax-highlighting",
+                "zsh-vi-mode",
+            }
         }
     }
 end

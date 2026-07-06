@@ -2,7 +2,12 @@ return function(lib)
     return {
         desym = {
             symlinks = {
-                [lib.configd.. "kitty"] = { source = lib.cwd().. "source" }
+                [lib.configd .. "kitty"] = { source = lib.cwd() .. "source" }
+            }
+        },
+        depac = {
+            packages = {
+                "kitty",
             }
         }
     }

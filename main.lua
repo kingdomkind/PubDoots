@@ -18,13 +18,22 @@ globals.mode = tonumber("644", 8)
 lib.merge(lib, globals)
 
 local result = loadfile(lib.uniqued .. "system.lua")()(lib)
+lib.merge(result, {
+    depac = {
+        packages = {
+            "lua-lux",
+            "lux-cli",
+            "jq",
+        }
+    }
+})
 
---> Debug dump
 ---@diagnostic disable-next-line
 if false then
+    print("Printing debug");
     local pretty = require("pl.pretty")
     pretty.dump(result)
+else
+    local json = cjson.encode(result)
+    print(json)
 end
-
-local json = cjson.encode(result)
-print(json)
