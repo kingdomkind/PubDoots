@@ -96,6 +96,7 @@ export EDITOR=nvim
                 "zsh-autosuggestions",
                 "zsh-syntax-highlighting",
                 "zsh-vi-mode",
+                "fzf",
             }
         }
     }

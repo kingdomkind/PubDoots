@@ -10,6 +10,7 @@ return function(lib)
         lib.modulesd .. "jj/jj.lua",
         { lib.modulesd .. "grub/grub.lua",             { source = lib.cwd() .. "grub" } },
         { lib.modulesd .. "mkinitcpio/mkinitcpio.lua", { source = lib.cwd() .. "mkinitcpio.conf" } },
+        lib.modulesd .. "scx_lavd/scx_lavd",
         lib.uniqued .. "tablet/tablet.lua",
     })
 
@@ -26,17 +27,14 @@ return function(lib)
                 "dinit",
                 "efibootmgr",
                 "elogind-dinit",
-                "linux",
-                "linux-firmware",
-                "linux-headers",
                 "linux-zen",
                 "linux-zen-headers",
+                "linux-firmware-nvidia",
+                "linux-firmware-realtek",
 
                 --> Corey
                 "bluez-dinit",
-                "chrony",
                 "chrony-dinit",
-                "networkmanager",
                 "networkmanager-dinit",
                 "nvidia-open-dkms",
                 "openssh",
@@ -63,10 +61,11 @@ return function(lib)
                 "swtpm",
                 "virt-manager",
 
+                --> Apps
+                "blueman",
                 "btop",
                 "fastfetch",
                 "flatpak",
-                "fzf",
                 "less",
                 "nvtop",
                 "rsync",
@@ -97,7 +96,6 @@ return function(lib)
                 "protonup-qt-bin",
                 "steam",
                 "umu-launcher",
-                "wine-staging",
                 "winetricks",
             },
 
