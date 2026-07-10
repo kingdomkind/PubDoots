@@ -15,13 +15,7 @@ return function(lib, args)
     lib.merge(base, {
         desym = {
             files = {
-                ["/etc/default/grub"] = {
-                    source = content,
-                    uid = lib.uid,
-                    gid = lib.gid,
-                    mode = lib.mode,
-
-                }
+                ["/etc/default/grub"] = lib:root_file(content)
             }
         },
     })

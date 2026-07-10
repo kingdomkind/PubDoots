@@ -1,7 +1,7 @@
 local pl = require("pl.path")
 
 return function(lib)
-    local body = [[
+    local content = [[
 #> Exports
 export PATH="/home/pika/.bun/bin:$PATH"
 
@@ -11,10 +11,13 @@ PS1='[%(!.%n .)%1~]$ '
 # Aliases
 alias rm='rm -I'
 alias grep='grep --color=auto'
-alias build-config="(cd ]] .. pl.abspath(lib.dootsd) .. [[ && ./reload.sh)"
 alias vi="nvim"
 alias sudo="sudo "
 alias space="du -sh ./ ; du -sh ./*"
+
+build-config() {
+    (cd ]] .. pl.abspath(lib.dootsd) .. [[ && ./reload.sh "$@")
+}
 
 #> Octal permissions will only show in long view, hence why we can globally apply it
 alias ls="eza --icons=always --colour=always --octal-permissions"
@@ -80,12 +83,7 @@ export EDITOR=nvim
     return {
         desym = {
             files = {
-                [lib.homed .. ".zshrc"] = {
-                    source = body,
-                    uid = lib.uid,
-                    gid = lib.gid,
-                    mode = lib.mode,
-                }
+                [lib.homed .. ".zshrc"] = lib:user_file(content)
             }
         },
         depac = {
@@ -95,8 +93,10 @@ export EDITOR=nvim
                 "zsh",
                 "zsh-autosuggestions",
                 "zsh-syntax-highlighting",
-                "zsh-vi-mode",
                 "fzf",
+            },
+            ignore = {
+                "zsh-vi-mode",
             }
         }
     }

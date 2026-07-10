@@ -106,13 +106,13 @@ lock_keys = false
     return {
         desym = {
             files = {
-                [lib.configd .. "noctalia/settings.toml"] = {
-                    source = content,
-                    uid = lib.uid,
-                    gid = lib.gid,
-                    mode = lib.mode,
-                }
+                [lib.configd .. "noctalia/settings.toml"] = lib:user_file(content)
             }
+        },
+        depac = {
+            ignore = {
+                "noctalia-git",
+            },
         }
     }
 end

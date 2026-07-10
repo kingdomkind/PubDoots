@@ -15,12 +15,7 @@ return function(lib, args)
     lib.merge(base, {
         desym = {
             files = {
-                ["/etc/mkinitcpio.conf"] = {
-                    source = content,
-                    uid = lib.uid,
-                    gid = lib.gid,
-                    mode = lib.mode
-                }
+                ["/etc/mkinitcpio.conf"] = lib:root_file(content),
             }
         },
     })

@@ -1,4 +1,0 @@
-type = process
-command = /usr/bin/scx_lavd
-restart = true
-logfile = /var/log/dinit/scx_lavd.log

@@ -13,6 +13,10 @@ return function(lib, args)
                 "satty",
                 "hyprpicker",
                 "wl-clipboard",
+            },
+            ignore = {
+                "rose-pine-hyprcursor",
+                "grimblast-git",
             }
         }
     }

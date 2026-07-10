@@ -8,6 +8,7 @@ return function(lib)
         depac = {
             packages = {
                 "kitty",
+                "ttf-cascadia-code-nerd",
             }
         }
     }

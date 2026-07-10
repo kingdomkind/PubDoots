@@ -10,7 +10,7 @@ return function(lib)
         lib.modulesd .. "jj/jj.lua",
         { lib.modulesd .. "grub/grub.lua",             { source = lib.cwd() .. "grub" } },
         { lib.modulesd .. "mkinitcpio/mkinitcpio.lua", { source = lib.cwd() .. "mkinitcpio.conf" } },
-        lib.modulesd .. "scx_lavd/scx_lavd",
+        { lib.modulesd .. "scheds/scheds.lua",         { sched = "scx_lavd" } },
         lib.uniqued .. "tablet/tablet.lua",
     })
 
@@ -39,8 +39,6 @@ return function(lib)
                 "nvidia-open-dkms",
                 "openssh",
                 "opentabletdriver",
-                "rtkit",
-                "scx-scheds",
                 "pipewire-dinit",
                 "pipewire-pulse-dinit",
                 "wireplumber-dinit",
@@ -49,8 +47,6 @@ return function(lib)
                 --> Fonts
                 "noto-fonts",
                 "noto-fonts-emoji",
-                "rose-pine-hyprcursor",
-                "ttf-cascadia-code-nerd",
 
                 --> Virtualisation
                 "distrobox",
@@ -70,30 +66,21 @@ return function(lib)
                 "nvtop",
                 "rsync",
                 "unzip",
-
-                "clang",
                 "libc++",
                 "rustup",
                 "tokei",
                 "vulkan-headers",
-
                 "cosmic-files",
                 "gamescope",
-                "kitty",
-
                 "blender",
                 "firefox",
                 "flatseal",
                 "krita",
                 "mpv",
                 "obs-studio",
-                "pureref",
                 "signal-desktop",
                 "telegram-desktop",
-                "vesktop-bin",
                 "yt-dlp",
-
-                "protonup-qt-bin",
                 "steam",
                 "umu-launcher",
                 "winetricks",
@@ -102,9 +89,10 @@ return function(lib)
             ignore = {
                 "brave-origin-nightly-bin",
                 "discord-chat-exporter-cli-bin",
-                "grimblast-git",
-                "noctalia-git",
                 "userspawn-git",
+                "protonup-qt-bin",
+                "pureref",
+                "vesktop-bin",
                 "paru",
             }
         }
