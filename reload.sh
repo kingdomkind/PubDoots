@@ -1,5 +1,5 @@
 #!/bin/bash
-set -e
+set -eo pipefail
 cd "$(dirname "$0")"
 
 config=$(lx run)
@@ -7,8 +7,11 @@ if [ "$1" = "dry" ]; then
     printf '%s' "$config" | jq .
 else
     for generator in desym depac; do
-        echo -e "\033[38;5;208m[NEXT]\033[0m $generator"
-        (cd "../Software/$generator" && cargo build && printf '%s' "$config"| jq ".$generator" | sudo ./target/debug/$generator)
+        printf "\033[38;5;208m[NEXT]\033[0m %s\n" $generator
+        path=/tmp/$generator
+        rm -f "$path" #> Technically unnecessary, but if something fails to generate the config again, i want to know
+        printf '%s' "$config" | jq ".$generator" > "$path"
+        (cd "../Software/$generator" && cargo build && sudo "./target/debug/$generator" "$path")
     done
 fi
 

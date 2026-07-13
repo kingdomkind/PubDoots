@@ -99,7 +99,7 @@ enable_overdrive = true
 [location]
 auto_locate = true
 
-[osd]
+[osd.keys]
 lock_keys = false
 ]=]
 

@@ -84,6 +84,7 @@ return function(lib)
                 "steam",
                 "umu-launcher",
                 "winetricks",
+                "kicad",
             },
 
             ignore = {
@@ -93,7 +94,7 @@ return function(lib)
                 "protonup-qt-bin",
                 "pureref",
                 "vesktop-bin",
-                "paru",
+                "yay",
             }
         }
     })
