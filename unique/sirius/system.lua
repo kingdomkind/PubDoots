@@ -85,6 +85,7 @@ return function(lib)
                 "umu-launcher",
                 "winetricks",
                 "kicad",
+                "wayland-utils",
             },
 
             ignore = {
@@ -95,6 +96,8 @@ return function(lib)
                 "pureref",
                 "vesktop-bin",
                 "yay",
+                "linux-vfio",
+                "linux-vfio-headers",
             }
         }
     })
