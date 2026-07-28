@@ -43,6 +43,8 @@ return function(lib)
                 "pipewire-pulse-dinit",
                 "wireplumber-dinit",
                 "dnsmasq",
+                "userspawn-dinit",
+                "brightnessctl",
 
                 --> Fonts
                 "noto-fonts",
@@ -57,7 +59,6 @@ return function(lib)
                 "kitty",
                 "firefox",
                 "mpv",
-                "obs-studio",
                 "signal-desktop",
                 "telegram-desktop",
                 "yt-dlp",
@@ -68,7 +69,6 @@ return function(lib)
                 "discord-chat-exporter-cli-bin",
                 "grimblast-git",
                 "noctalia-git",
-                "userspawn-git",
                 "yay",
             }
         }
