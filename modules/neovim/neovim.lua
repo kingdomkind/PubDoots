@@ -11,6 +11,9 @@ return function(lib)
                 "clang",
                 "lua-language-server",
                 "rust-analyzer",
+            },
+            ignore = {
+                "glsl_analyzer-bin"
             }
         }
     }

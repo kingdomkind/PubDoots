@@ -125,7 +125,7 @@ do
         "zls",
         "lua_ls",
         "svelte",
-        "glslls",
+        "glsl_analyzer",
         "pyright"
     }
 
@@ -134,6 +134,10 @@ do
         --> which is where nvim-lspconfig dumps its configs
         vim.lsp.enable(lsp)
     end
+
+    --> Clear clangd setting comment token types to things that aren't comments
+    --> Comments have additional highlight groups, that will still be used, even if the LSP doesn't provide its own
+    set_transparent({ "@lsp.type.comment.cpp" })
 end
 
 --> Better Syntax Highlighting, works in conjunction with LSPs

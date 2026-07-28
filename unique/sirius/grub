@@ -11,4 +11,4 @@ GRUB_TERMINAL_INPUT=console
 GRUB_GFXMODE=640x480
 GRUB_GFXPAYLOAD_LINUX=keep
 GRUB_DISABLE_RECOVERY=true
-GRUB_TOP_LEVEL="/boot/vmlinuz-linux-zen"
+GRUB_TOP_LEVEL="/boot/vmlinuz-linux-vfio"

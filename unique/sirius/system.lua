@@ -98,6 +98,12 @@ return function(lib)
                 "yay",
                 "linux-vfio",
                 "linux-vfio-headers",
+                "havoc",
+            }
+        },
+        desym = {
+            files = {
+                ["/etc/NetworkManager/conf.d/0-global-dns.conf"] = lib:root_file("[global-dns-domain-*]\nservers=1.1.1.1,1.0.0.1")
             }
         }
     })
