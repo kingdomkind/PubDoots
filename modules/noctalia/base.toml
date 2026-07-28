@@ -1,0 +1,187 @@
+# >> Bar <<
+[bar]
+order = [ "Left", "Right", "Top", "Bottom" ]
+
+[bar.Top]
+background_opacity = 0.9
+capsule = true
+capsule_thickness = 0.7
+end = [ "brightness", "volume", "group:g1" ]
+font_weight = 700
+layer = "overlay"
+margin_edge = 0
+margin_ends = 0
+padding = 15
+radius = 0
+radius_bottom_left = 80
+radius_bottom_right = 80
+start = [ "workspaces", "nightlight", "notifications", "tray", "media" ]
+
+[[bar.Top.capsule_group]]
+enabled = true
+fill = "surface_variant"
+id = "g1"
+members = [ "battery", "network" ]
+opacity = 1.0
+padding = 6.0
+
+[bar.Bottom]
+background_opacity = 0.9
+center = [ "audio_visualizer" ]
+enabled = true
+end = []
+layer = "overlay"
+margin_edge = 0
+margin_ends = 0
+radius = 0
+radius_top_left = 80
+radius_top_right = 80
+start = []
+position = "bottom"
+
+[bar.Left]
+background_opacity = 0.9
+center = []
+enabled = true
+end = []
+layer = "overlay"
+margin_edge = 0
+margin_ends = 0
+radius = 0
+start = []
+position = "left"
+
+[bar.Right]
+background_opacity = 0.9
+center = []
+enabled = true
+end = []
+layer = "overlay"
+margin_edge = 0
+margin_ends = 0
+radius = 0
+start = []
+position = "right"
+
+# >> Shell <<
+[shell]
+telemetry_enabled = false
+password_style = "random"
+polkit_agent = true
+
+[shell.panel]
+launcher_categories = false
+session_placement = "centered"
+
+[shell.launcher]
+categories = false
+session_search = true
+
+[[shell.session.actions]]
+action = "lock"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "1"
+variant = "default"
+
+[[shell.session.actions]]
+action = "logout"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "2"
+variant = "default"
+
+[[shell.session.actions]]
+action = "lock_and_suspend"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "3"
+variant = "default"
+
+[[shell.session.actions]]
+action = "reboot"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "4"
+variant = "default"
+
+[[shell.session.actions]]
+action = "command"
+command = "loginctl hibernate"
+countdown_seconds = 0.0
+enabled = true
+glyph = "brand-slack"
+label = "Hibernate"
+shortcut = "5"
+variant = "default"
+
+[[shell.session.actions]]
+action = "shutdown"
+countdown_seconds = 0.0
+enabled = true
+shortcut = "6"
+variant = "destructive"
+
+# >> WIDGETS <<
+[widget.audio_visualizer]
+scale = 1.75
+bands = 128
+show_when_idle = true
+width = 400
+
+[widget.media]
+title_scroll = "always"
+hide_when_no_media = true
+
+[widget.tray]
+drawer = true
+
+[widget.screen_recorder]
+enabled = true
+filename_pattern = "quickrec_%Y%m%d_%H%M%S"
+hide_inactive = true
+script = "scripts/screen_recorder.lua"
+type = "scripted"
+
+[widget.clock]
+format = "{:%a %d %b %-I:%M %P}"
+
+# >> Control Center <<
+
+[[control_center.shortcuts]]
+type = "wifi"
+
+[[control_center.shortcuts]]
+type = "bluetooth"
+
+[[control_center.shortcuts]]
+type = "caffeine"
+
+[[control_center.shortcuts]]
+type = "notification"
+
+[[control_center.shortcuts]]
+type = "power_profile"
+
+[[control_center.shortcuts]]
+type = "screen_recorder"
+
+# >> Misc <<
+[theme]
+builtin = "Catppuccin"
+source = "wallpaper"
+wallpaper_scheme = "m3-rainbow"
+
+[notification]
+offset_y = 16
+position = "top_center"
+layer = "overlay"
+
+[audio]
+enable_overdrive = true
+
+[location]
+auto_locate = true
+
+[osd.keys]
+lock_keys = false

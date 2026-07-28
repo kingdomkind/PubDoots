@@ -6,6 +6,7 @@ return function(lib)
         lib.modulesd .. "zsh/zsh.lua",
         lib.modulesd .. "noctalia/noctalia.lua",
         lib.modulesd .. "yazi/yazi.lua",
+        lib.modulesd .. "jj/jj.lua",
         { lib.modulesd .. "hypr/hypr.lua", { extension = lib.cwd() .. "hyprext.lua" } },
     })
 
