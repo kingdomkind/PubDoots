@@ -28,8 +28,8 @@ hl.config({
         rounding = 0,
         blur = {
             enabled = true,
-            passes = 2,
-            size = 10,
+            passes = 3,
+            size = 5,
         },
     },
 
@@ -86,7 +86,7 @@ local b = "SUPER + SHIFT"
 local c = "SUPER + SHIFT + ALT"
 
 --> Non-compositor binds
-hl.bind(a .. "+D", hl.dsp.exec_cmd("brave-origin-nightly --enable-features=TouchpadOverscrollHistoryNavigation"))
+hl.bind(a .. "+D", hl.dsp.exec_cmd("brave-origin --enable-features=TouchpadOverscrollHistoryNavigation"))
 hl.bind(a .. "+B", hl.dsp.exec_cmd("firefox"))
 hl.bind(a .. "+Q", hl.dsp.exec_cmd(terminal))
 hl.bind(a .. "+N", hl.dsp.exec_cmd("alacritty"))

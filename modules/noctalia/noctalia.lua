@@ -11,8 +11,8 @@ return function(lib, args)
             }
         },
         depac = {
-            ignore = {
-                "noctalia-git",
+            packages = {
+                "noctalia",
             },
         }
     }

@@ -2,7 +2,7 @@
 set -eo pipefail
 cd "$(dirname "$0")"
 
-config=$(lx run)
+config=$(lx run | sed -n '/^{/,$p')
 if [ "$1" = "dry" ]; then
     printf '%s' "$config" | jq .
 else
