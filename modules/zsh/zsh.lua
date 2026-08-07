@@ -78,6 +78,16 @@ source /usr/share/fzf/completion.zsh
 export _ZO_ECHO=1
 eval "$(zoxide init zsh --cmd j)"
 export EDITOR=nvim
+
+clear-scrollback() {
+    zle -I
+    printf '\e[2J\e[3J\e[H'
+    zle reset-prompt
+}
+zle -N clear-scrollback
+zvm_after_init() {
+    zvm_bindkey viins '^L' clear-scrollback
+}
 ]]
 
     return {
