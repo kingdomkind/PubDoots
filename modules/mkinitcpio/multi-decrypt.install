@@ -1,0 +1,18 @@
+#!/bin/sh
+
+build() {
+    add_module dm-crypt
+    add_all_modules "/crypto/"
+    add_binary "cryptsetup"
+    #> 10-dm.rules creates the /dev/mapper symlink and cryptsetup yields until 95-dm-notify tells us the mapping was made, so it can then return
+    map add_udev_rule "10-dm.rules" "95-dm-notify.rules"
+    add_runscript
+}
+
+help() {
+    cat << EOF
+Like encrypt, but can support multiple devices to decrypt using the same password.
+Kernel arg: cryptdevices=/dev/nvme0n1p1:decryptdevice,UUID=MYCOOLUUID:MapperName
+Notice how it"s comma separated, and it"s cryptdevices, not cryptdevice.
+EOF
+}

@@ -1,0 +1,60 @@
+#!/usr/bin/ash
+
+run_hook() {
+    local rootdelay password args resolved_args arg device mapper resolved_device resolved_arg attempt
+    modprobe -q dm-crypt
+
+    args="$(getarg cryptdevices | sed 's/,/ /g')"
+    if [ -z "$args" ]; then
+        err "No cryptdevice= argument supplied, nothing we can do"
+        return 1
+    fi
+    resolved_args=""
+    rootdelay="$(getarg rootdelay)"
+
+    for arg in $args; do
+        device="${arg%%:*}"
+        mapper="${arg#*:}"
+
+        if ! resolved_device="$(resolve_device "$device" "$rootdelay")"; then
+            err "Couldn't resolve $device"
+            continue
+        fi
+
+        resolved_arg="${resolved_device}:${mapper}"
+        resolved_args="${resolved_args}${resolved_args:+ }${resolved_arg}"
+    done
+
+    if [ -z "$resolved_args" ]; then
+        err "Failed to resolve a single device..."
+        return 1
+    fi
+
+    printf "Enter password: "
+    IFS= read -r -s password
+    printf "\n"
+
+    for arg in $resolved_args; do
+        device="${arg%%:*}"
+        mapper="${arg#*:}"
+        if ! printf "%s" "$password" | cryptsetup open --type luks --key-file=- "$device" "$mapper"; then
+            attempt=1
+            while [ "$attempt" -le 3 ]; do
+                printf "Password for %s [attempt %s/3]: " "$device" "$attempt"
+                IFS= read -r -s password
+                printf "\n"
+
+                if printf "%s" "$password" | cryptsetup open --type luks --key-file=- "$device" "$mapper"; then
+                    break
+                fi
+
+                printf "Incorrect password!\n"
+                attempt=$((attempt + 1))
+            done
+
+            if [ "$attempt" -eq 4 ]; then
+                err "Couldn't open $device:$mapper"
+            fi
+        fi
+    done
+}

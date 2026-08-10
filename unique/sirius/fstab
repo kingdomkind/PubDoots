@@ -1,0 +1,4 @@
+/dev/mapper/castle	/         	btrfs     	rw,relatime,ssd,space_cache=v2,subvol=/	0 0
+/dev/nvme0n1p1      	/boot     	vfat      	rw,relatime,fmask=0022,dmask=0022,codepage=437,iocharset=ascii,shortname=mixed,utf8,errors=remount-ro	0 2
+/swap/swapfile  none    swap    defaults    0 0
+/dev/mapper/nomad	/home/pika/Nomad	btrfs     	rw,relatime,ssd,space_cache=v2,subvol=/,nofail	0 0

@@ -9,8 +9,10 @@ return function(lib)
         { lib.modulesd .. "hypr/hypr.lua",             { extension = lib.cwd() .. "hyprext.lua" } },
         lib.modulesd .. "jj/jj.lua",
         { lib.modulesd .. "grub/grub.lua",             { source = lib.cwd() .. "grub" } },
-        { lib.modulesd .. "mkinitcpio/mkinitcpio.lua", { source = lib.cwd() .. "mkinitcpio.conf" } },
+        { lib.modulesd .. "fstab/fstab.lua",           { source = lib.cwd() .. "fstab" } },
+        { lib.modulesd .. "mkinitcpio/mkinitcpio.lua", { source = lib.cwd() .. "mkinitcpio.conf", custom = { "multi-decrypt" } } },
         { lib.modulesd .. "scheds/scheds.lua",         { sched = "scx_lavd" } },
+        lib.modulesd .. "autologin/autologin.lua",
         lib.uniqued .. "tablet/tablet.lua",
     })
 
@@ -49,9 +51,7 @@ return function(lib)
                 "noto-fonts-emoji",
 
                 --> Virtualisation
-                "distrobox",
                 "libvirt-dinit",
-                "podman",
                 "qemu-base",
                 "qemu-hw-usb-host",
                 "swtpm",
@@ -72,7 +72,6 @@ return function(lib)
                 "vulkan-headers",
                 "cosmic-files",
                 "gamescope",
-                "blender",
                 "firefox",
                 "krita",
                 "mpv",
@@ -90,6 +89,7 @@ return function(lib)
                 "downgrade",
                 "cuda",
                 "mold",
+                "openai-codex",
             },
 
             ignore = {
@@ -98,8 +98,6 @@ return function(lib)
                 "protonup-qt-bin",
                 "pureref",
                 "yay",
-                "linux-vfio",
-                "linux-vfio-headers",
                 "havoc",
                 "cachyos-keyring",
                 "cachyos-mirrorlist",

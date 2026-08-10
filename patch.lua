@@ -7,6 +7,7 @@ return function(hostname)
     patch.modulesd = "modules/"
     patch.uid = 1000
     patch.gid = 1000
+    patch.user = "pika"
     patch.mode = tonumber("644", 8)
 
     function patch:root_file(content)
