@@ -12,9 +12,13 @@ local result = loadfile(lib.uniqued .. "system.lua")()(lib)
 lib.merge(result, {
     depac = {
         packages = {
+            "luajit",
             "lua-lux",
             "lux-cli",
             "jq",
+            "cachyos-keyring",
+            "cachyos-mirrorlist",
+            "cachyos-v3-mirrorlist",
         }
     }
 })

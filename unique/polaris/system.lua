@@ -1,5 +1,6 @@
 return function(lib)
     local result = lib.imports({}, {
+        lib.modulesd .. "artix/artix.lua",
         lib.modulesd .. "fastfetch/fastfetch.lua",
         lib.modulesd .. "kitty/kitty.lua",
         lib.modulesd .. "neovim/neovim.lua",
@@ -7,51 +8,26 @@ return function(lib)
         lib.modulesd .. "noctalia/noctalia.lua",
         lib.modulesd .. "yazi/yazi.lua",
         lib.modulesd .. "jj/jj.lua",
-        { lib.modulesd .. "hypr/hypr.lua", { extension = lib.cwd() .. "hyprext.lua" } },
+        { lib.modulesd .. "hypr/hypr.lua",             { extension = lib.cwd() .. "hyprext.lua" } },
+        lib.modulesd .. "autologin/autologin.lua",
+        { lib.modulesd .. "grub/grub.lua",             { source = lib.cwd() .. "grub" } },
+        { lib.modulesd .. "fstab/fstab.lua",           { source = lib.cwd() .. "fstab" } },
+        { lib.modulesd .. "mkinitcpio/mkinitcpio.lua", { source = lib.cwd() .. "mkinitcpio.conf" } },
+
     })
 
     lib.merge(result, {
         depac = {
             packages = {
-                --> Core
-                "gcc",
-                "git",
-                "grub",
-                "lua54",
                 "make",
-                "networkmanager",
                 "rustup",
-                "sudo",
                 "intel-ucode",
-                "arch-install-scripts",
-                "artix-archlinux-support",
-                "base",
-                "base-devel",
-                "cryptsetup",
-                "dinit",
-                "efibootmgr",
-                "elogind-dinit",
                 "linux",
                 "linux-headers",
                 "linux-firmware",
-
-                --> Corey
-                "bluez-dinit",
-                "chrony-dinit",
-                "networkmanager-dinit",
-                "openssh",
-                "pipewire-dinit",
-                "pipewire-pulse-dinit",
-                "wireplumber-dinit",
-                "dnsmasq",
+                "fprintd",
                 "userspawn-dinit",
                 "brightnessctl",
-
-                --> Fonts
-                "noto-fonts",
-                "noto-fonts-emoji",
-                "ttf-cascadia-code-nerd",
-
                 "btop",
                 "fastfetch",
                 "less",
@@ -61,15 +37,11 @@ return function(lib)
                 "firefox",
                 "mpv",
                 "signal-desktop",
-                "telegram-desktop",
                 "yt-dlp",
+                "upower",
             },
 
             ignore = {
-                "brave-origin-nightly-bin",
-                "discord-chat-exporter-cli-bin",
-                "grimblast-git",
-                "noctalia-git",
                 "yay",
             }
         }

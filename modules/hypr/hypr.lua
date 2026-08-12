@@ -13,6 +13,9 @@ return function(lib, args)
                 "satty",
                 "hyprpicker",
                 "wl-clipboard",
+                "noctalia",
+                "brave-origin-bin",
+                "grimblast",
             },
             ignore = {
                 "rose-pine-hyprcursor",

@@ -7,3 +7,7 @@ log = "all()"
 
 [remotes.origin]
 auto-track-bookmarks = "*"
+
+[user]
+name = "kingdomkind"
+email = "kingdomkind@protonmail.com"

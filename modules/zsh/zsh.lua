@@ -104,6 +104,7 @@ zvm_after_init() {
                 "zsh-autosuggestions",
                 "zsh-syntax-highlighting",
                 "fzf",
+                "ripgrep",
             },
             ignore = {
                 "zsh-vi-mode",
