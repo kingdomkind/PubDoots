@@ -3,10 +3,10 @@
 order = [ "Left", "Right", "Top", "Bottom" ]
 
 [bar.Top]
-background_opacity = 0.9
+background_opacity = 0.5
 capsule = true
 capsule_thickness = 0.7
-end = [ "brightness", "volume", "group:g1" ]
+capsule_opacity = 0.0
 font_weight = 700
 layer = "overlay"
 margin_edge = 0
@@ -16,17 +16,10 @@ radius = 0
 radius_bottom_left = 80
 radius_bottom_right = 80
 start = [ "workspaces", "nightlight", "notifications", "tray", "media" ]
-
-[[bar.Top.capsule_group]]
-enabled = true
-fill = "surface_variant"
-id = "g1"
-members = [ "battery", "network" ]
-opacity = 1.0
-padding = 6.0
+end = [ "brightness", "volume", "battery", "network" ]
 
 [bar.Bottom]
-background_opacity = 0.9
+background_opacity = 0.5
 center = [ "audio_visualizer" ]
 enabled = true
 end = []
@@ -40,7 +33,7 @@ start = []
 position = "bottom"
 
 [bar.Left]
-background_opacity = 0.9
+background_opacity = 0.5
 center = []
 enabled = true
 end = []
@@ -52,7 +45,7 @@ start = []
 position = "left"
 
 [bar.Right]
-background_opacity = 0.9
+background_opacity = 0.5
 center = []
 enabled = true
 end = []
@@ -72,6 +65,7 @@ polkit_agent = true
 [shell.panel]
 launcher_categories = false
 session_placement = "centered"
+transparency_mode = "glass"
 
 [shell.launcher]
 categories = false
@@ -147,7 +141,6 @@ type = "scripted"
 format = "{:%a %d %b %-I:%M %P}"
 
 # >> Control Center <<
-
 [[control_center.shortcuts]]
 type = "wifi"
 
@@ -176,12 +169,16 @@ wallpaper_scheme = "m3-rainbow"
 offset_y = 16
 position = "top_center"
 layer = "overlay"
+background_opacity = 0.5
 
 [audio]
 enable_overdrive = true
 
 [location]
 auto_locate = true
+
+[osd]
+background_opacity = 0.5
 
 [osd.keys]
 lock_keys = false

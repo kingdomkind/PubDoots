@@ -12,7 +12,7 @@ PS1='[%(!.%n .)%1~]$ '
 alias rm='rm -I'
 alias grep='grep --color=auto'
 alias vi="nvim"
-alias sudo="sudo "
+alias sudo="pkexec "
 alias space="du -sh ./ ; du -sh ./*"
 
 build-config() {

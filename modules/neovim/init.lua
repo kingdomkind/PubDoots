@@ -127,7 +127,8 @@ do
         "lua_ls",
         "svelte",
         "glsl_analyzer",
-        "pyright"
+        "pyright",
+        "bashls",
     }
 
     for _, lsp in ipairs(lsps) do
@@ -139,6 +140,24 @@ do
     --> Clear clangd setting comment token types to things that aren't comments
     --> Comments have additional highlight groups, that will still be used, even if the LSP doesn't provide its own
     set_transparent({ "@lsp.type.comment.cpp" })
+end
+
+--> Code Formatting
+do
+    vim.pack.add({
+        "https://github.com/stevearc/conform.nvim"
+    })
+    --> LSPs can also do formatting, but conform allows us to use
+    --> regular formatters too
+    local conform = require("conform")
+    conform.setup({
+        formatters_by_ft = {
+            sh = { "shfmt" }
+        }
+    })
+    vim.keymap.set("n", kb.format_code, function()
+        conform.format({ async = true, lsp_fallback = true })
+    end)
 end
 
 --> Better Syntax Highlighting, works in conjunction with LSPs
@@ -376,21 +395,6 @@ do
         }
     })
 end
-
---> Code Formatting
-do
-    vim.pack.add({
-        "https://github.com/stevearc/conform.nvim"
-    })
-    --> LSPs can also do formatting, but conform allows us to use
-    --> regular formatters too
-    local conform = require("conform")
-    conform.setup({})
-    vim.keymap.set("n", kb.format_code, function()
-        conform.format({ async = true, lsp_fallback = true })
-    end)
-end
-
 
 --> Write as Sudo
 do

@@ -1,5 +1,6 @@
 return function(lib)
     local result = lib.imports({}, {
+        lib.modulesd .. "artix/artix.lua",
         lib.modulesd .. "fastfetch/fastfetch.lua",
         lib.modulesd .. "kitty/kitty.lua",
         lib.modulesd .. "neovim/neovim.lua",
@@ -21,34 +22,14 @@ return function(lib)
             packages = {
                 --> Core
                 "amd-ucode",
-                "arch-install-scripts",
-                "artix-archlinux-support",
-                "base",
-                "base-devel",
-                "cryptsetup",
-                "dinit",
-                "efibootmgr",
-                "elogind-dinit",
                 "linux-cachyos",
                 "linux-cachyos-headers",
                 "linux-firmware-nvidia",
                 "linux-firmware-realtek",
 
                 --> Corey
-                "bluez-dinit",
-                "chrony-dinit",
-                "networkmanager-dinit",
                 "nvidia-open-dkms",
-                "openssh",
                 "opentabletdriver",
-                "pipewire-dinit",
-                "pipewire-pulse-dinit",
-                "wireplumber-dinit",
-                "dnsmasq",
-
-                --> Fonts
-                "noto-fonts",
-                "noto-fonts-emoji",
 
                 --> Virtualisation
                 "libvirt-dinit",
@@ -99,9 +80,7 @@ return function(lib)
                 "pureref",
                 "yay",
                 "havoc",
-                "cachyos-keyring",
-                "cachyos-mirrorlist",
-                "cachyos-v3-mirrorlist",
+                "evsieve-git",
             }
         },
         desym = {

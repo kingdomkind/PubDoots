@@ -15,11 +15,10 @@ return function(lib, args)
                 "wl-clipboard",
                 "noctalia",
                 "brave-origin-bin",
-                "grimblast",
+                "grimblast-git",
             },
             ignore = {
                 "rose-pine-hyprcursor",
-                "grimblast-git",
             }
         }
     }

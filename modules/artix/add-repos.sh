@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+#> Arch Repos
+sudo pacman -S artix-archlinux-support
+
 #> CachyOS Repos
 sudo pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
 sudo pacman-key --lsign-key F3B607488DB35A47

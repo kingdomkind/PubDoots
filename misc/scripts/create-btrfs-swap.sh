@@ -10,7 +10,7 @@ pacman -S --needed btrfs-progs
 #> automatically. Note that online, people use eg. @swap, @ means nothing it's
 #> just that they named it @swap, rather than just swap
 #> https://fedoramagazine.org/working-with-btrfs-subvolumes/
-btrfs subvolume create /swap 
+btrfs subvolume create /swap
 #> The C attribute means to disable copy-on-write
 #> https://man7.org/linux/man-pages/man1/chattr.1.html
 #> As per the manpage, when applied on a folder it means any new files made in it
@@ -37,7 +37,7 @@ if [ "${usefstab}" == "y" ]; then
         "${fstabname}  /swap   btrfs   subvol=swap,nofail   0   0" \
         "#> Swapfile" \
         "/swap/swapfile   none    swap    defaults,nofail    0    0" \
-        >> /etc/fstab
+        >>/etc/fstab
     echo "Appended to fstab, good luck and God speed. New fstab:"
     cat /etc/fstab
 else

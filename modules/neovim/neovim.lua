@@ -7,10 +7,15 @@ return function(lib)
         },
         depac = {
             packages = {
+                --> Lsps
                 "neovim",
                 "clang",
                 "lua-language-server",
                 "rust-analyzer",
+                "bash-language-server",
+
+                --> Formatters
+                "shfmt"
             },
             ignore = {
                 "glsl_analyzer-bin"
