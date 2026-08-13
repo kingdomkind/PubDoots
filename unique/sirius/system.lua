@@ -20,25 +20,21 @@ return function(lib)
     lib.merge(result, {
         depac = {
             packages = {
-                --> Core
                 "amd-ucode",
                 "linux-cachyos",
                 "linux-cachyos-headers",
                 "linux-firmware-nvidia",
                 "linux-firmware-realtek",
-
-                --> Corey
                 "nvidia-open-dkms",
+                "libva-nvidia-driver",
                 "opentabletdriver",
 
-                --> Virtualisation
                 "libvirt-dinit",
                 "qemu-base",
                 "qemu-hw-usb-host",
                 "swtpm",
                 "virt-manager",
 
-                --> Apps
                 "blueman",
                 "btop",
                 "fastfetch",
@@ -73,19 +69,21 @@ return function(lib)
                 "openai-codex",
             },
 
-            ignore = {
-                "discord-chat-exporter-cli-bin",
-                "userspawn-git",
+            pkgbuilds = {
                 "protonup-qt-bin",
                 "pureref",
                 "yay",
                 "havoc",
-                "evsieve-git",
+                { ["base"] = "userspawn-git",             rpc = false },
+                { ["base"] = "evsieve-git",               rpc = false },
+                { ["base"] = "jellium-desktop-git",       rpc = false },
+                { ["base"] = "discord-chat-exporter-bin", ["artifacts"] = { "discord-chat-exporter-cli-bin" } }
             }
         },
         desym = {
             files = {
-                ["/etc/NetworkManager/conf.d/0-global-dns.conf"] = lib:root_file("[global-dns-domain-*]\nservers=1.1.1.1,1.0.0.1")
+                ["/etc/NetworkManager/conf.d/0-global-dns.conf"] = lib:root_file(
+                    "[global-dns-domain-*]\nservers=1.1.1.1,1.0.0.1")
             }
         }
     })

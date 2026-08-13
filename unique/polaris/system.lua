@@ -42,10 +42,6 @@ return function(lib)
                 "upower",
                 "teams-for-linux",
             },
-
-            ignore = {
-                "yay",
-            }
         }
     })
 

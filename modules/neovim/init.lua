@@ -60,7 +60,6 @@ do
     vim.opt.softtabstop = 4                   --> How many spaces to jump in insert mode, when you press <TAB> or backspace.
     vim.opt.smarttab = false;                 --> If true, uses shiftwidth for tabsize when there is preceding whitespace, else, uses tabstop
     vim.opt.swapfile = false                  --> Neovim will no longer generate swapfiles
-    vim.lsp.log.set_level(vim.log.levels.OFF) --> Get rid of these bumass "logs too big" errors
     vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
     vim.keymap.set("t", kb.escape_in_terminal, "<Esc>")
     vim.keymap.set("n", kb.show_diagnostic, function() vim.diagnostic.open_float(nil, { focus = false }) end)

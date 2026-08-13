@@ -106,7 +106,7 @@ zvm_after_init() {
                 "fzf",
                 "ripgrep",
             },
-            ignore = {
+            pkgbuilds = {
                 "zsh-vi-mode",
             }
         }

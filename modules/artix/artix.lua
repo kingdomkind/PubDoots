@@ -47,6 +47,9 @@ return function(lib)
                 "cachyos-keyring",
                 "cachyos-mirrorlist",
                 "cachyos-v3-mirrorlist",
+            },
+            settings = {
+                ["elevation"] = "pkexec"
             }
         }
     }

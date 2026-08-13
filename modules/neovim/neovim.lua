@@ -17,7 +17,7 @@ return function(lib)
                 --> Formatters
                 "shfmt"
             },
-            ignore = {
+            pkgbuilds = {
                 "glsl_analyzer-bin"
             }
         }
