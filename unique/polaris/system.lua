@@ -24,7 +24,8 @@ return function(lib)
                 "intel-ucode",
                 "linux",
                 "linux-headers",
-                "linux-firmware",
+                "linux-firmware-intel",
+                "linux-firmware-other",
                 "fprintd",
                 "userspawn-dinit",
                 "brightnessctl",
@@ -39,6 +40,7 @@ return function(lib)
                 "signal-desktop",
                 "yt-dlp",
                 "upower",
+                "teams-for-linux",
             },
 
             ignore = {

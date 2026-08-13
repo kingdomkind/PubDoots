@@ -4,11 +4,19 @@ return function(lib)
     return {
         desym = {
             files = {
-                ["/etc/pacman.conf"] = lib:root_file(pl_file.read(lib.cwd() .. "pacman.conf"))
+                ["/etc/pacman.conf"] = lib:root_file(pl_file.read(lib.cwd() .. "pacman.conf")),
+                --> Make pk-exec cache the password / authorisation
+                ["/etc/polkit-1/rules.d/49-pkexec.rules"] = lib:root_file(pl_file.read(lib.cwd() .. "49-pkexec.rules")),
+                --> Add fingerprint support to polkit, if fprintd exists
+                ["/etc/pam.d/polkit-1"] = lib:root_file(pl_file.read(lib.cwd() .. "polkit-1"))
             }
         },
         depac = {
             packages = {
+                "luajit",
+                "lua-lux",
+                "lux-cli",
+                "jq",
                 "gcc",
                 "git",
                 "sudo",
@@ -30,6 +38,7 @@ return function(lib)
                 "noto-fonts",
                 "noto-fonts-emoji",
                 "ttf-cascadia-code-nerd",
+                "polkit",
                 "arch-install-scripts",
                 "artix-archlinux-support",
 

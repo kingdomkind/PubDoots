@@ -23,15 +23,7 @@ swapon /swap/swapfile
 read -rp "Woud you like the swap subvolume + swapfile added to the fstab?: [y/n]": usefstab
 
 if [ "${usefstab}" == "y" ]; then
-    read -rp "Is the root drive NOT /dev/mapper/decryptdevice? [y/n]": isbase
-    fstabname="/dev/mapper/decryptdevice"
-    if [ "${isbase}" == "y" ]; then
-        read -rp "What is the root drive then? ": fstabname
-    fi
-    if [ "${fstabname}" == "" ]; then
-        echo "Dumbass you put nothing"
-        exit 1
-    fi
+    fstabname="$(findmnt -no SOURCE /)"
     printf "\n%s\n%s\n%s\n%s\n" \
         "#> BTRFS Swap Subvolume" \
         "${fstabname}  /swap   btrfs   subvol=swap,nofail   0   0" \

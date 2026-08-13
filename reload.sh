@@ -11,7 +11,7 @@ else
         path=/tmp/$generator
         rm -f "$path" #> Technically unnecessary, but if something fails to generate the config again, i want to know
         printf '%s' "$config" | jq ".$generator" > "$path"
-        (cd "../Software/$generator" && cargo build && sudo "./target/debug/$generator" "$path")
+        (cd "../Software/$generator" && cargo build && pkexec "./target/debug/$generator" "$path")
     done
 fi
 
