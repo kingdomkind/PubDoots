@@ -54,7 +54,7 @@ return function(lib, args)
         }
     }
 
-    if args.generators then
+    if args and args.generators then
         lib.merge(result, {
             depac = {
                 pkgbuilds = {
