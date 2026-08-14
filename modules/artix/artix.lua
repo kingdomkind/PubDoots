@@ -1,7 +1,7 @@
 local pl_file = require("pl.file");
 
-return function(lib)
-    return {
+return function(lib, args)
+    local result = {
         desym = {
             files = {
                 ["/etc/pacman.conf"] = lib:root_file(pl_file.read(lib.cwd() .. "pacman.conf")),
@@ -53,4 +53,17 @@ return function(lib)
             }
         }
     }
+
+    if args.generators then
+        lib.merge(result, {
+            depac = {
+                pkgbuilds = {
+                    { ["base"] = "desym-git", rpc = false },
+                    { ["base"] = "depac-git", rpc = false },
+                }
+            }
+        })
+    end
+
+    return result
 end

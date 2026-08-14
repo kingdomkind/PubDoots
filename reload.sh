@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 set -eo pipefail
 cd "$(dirname "$0")"
 start_time=$(date +%s%3N)
@@ -25,7 +25,12 @@ run_generator() {
     path=/tmp/$1
     rm -f "$path" #> Technically unnecessary, but if something fails to generate the config again, i want to know
     printf '%s' "$config" | jq ".$1" >"$path"
-    (cd "../Software/$1" && cargo build && $prefix "./target/debug/$1" "$path")
+
+    if test -d "../Software/$1"; then
+        (cd "../Software/$1" && cargo build && $prefix "./target/debug/$1" "$path")
+    else
+        $prefix $1 $path
+    fi
 
 }
 
