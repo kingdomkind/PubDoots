@@ -1,0 +1,37 @@
+UEFI is capable of reading fat32.
+The EFI system partition is also called the E(fi)S(ystem)P(artition), ESP.
+
+NVRAM is data the UEFI can read, and stores the boot options. Efibootmgr writes into it.
+sudo efibootmgr --create --bootnum 0000 --disk /dev/nvme0n1 --part 1
+We give the NVRAM the disk and partition (/dev/nvme0n1 is the disk, part 1 is the partition,
+efibootmgr will write something like HD(1,GPT,ee82e155-f860-4ce3-a1d8-8a9e64d77ac7,0x800,0x400000)
+to the NVRAM, translating it for us), hence it knows where the ESP is.
+
+It looks for an EFI executable (UEFI can directly execute EFI compatible programs), as you
+specify in the NVRAM. For example:
+
+sudo efibootmgr --create --bootnum 0000 \
+    --disk /dev/nvme0n1 --part 1 \
+    --label "Artix" \
+    --loader /vmlinuz-linux-cachyos \
+
+Would use the vmlinuz-linux-cachyos as the EFI executable that the UEFI then executes.
+The kernel here, is a valid EFI executable (an EFI executable is embedded into the kernel,
+which will in turn run the kernel. That embedded EFI executable, is known as the EFI boot stub).
+https://docs.kernel.org/admin-guide/efi-stub.html
+
+sudo efibootmgr --create --bootnum 0000 \
+    --disk /dev/nvme0n1 --part 1 \
+    --label "Artix" \
+    --loader /vmlinuz-linux-cachyos \
+    --unicode 'loglevel=3 quiet cryptdevices=/dev/nvme0n1p2:castle,/dev/disk/by-id/ata-PNY_CS900_120GB_SSD_PNY21422110190104439-part1:nomad root=/dev/mapper/castle resume=/dev/mapper/castle resume_offset=17355308 amd_iommu=on vfio-pci.ids=10de:13c0,10de:0fbb pcie_acs_override=downstream,multifunction initrd=\amd-ucode.img initrd=\initramfs-linux-cachyos.img'
+
+In the NVRAM, we also specify the string (--unicode) we want passed to the EFI executable. The
+efi boot stub (embedded in the kernel), filters this string initrd arguments, and loads the specified
+paths into RAM (https://docs.kernel.org/admin-guide/efi-stub.html#the-initrd-option).
+It then hands of control to the kernel, with the rest of the remaining parameters.
+
+This may look basically just like a bootloader, but embedded into the kernel, because it is.
+The reason it is faster is because only 1 binary needs to be loaded instead of 2 (since the
+bootloader is embedded into the kernel), and since the EFI boot stub doesn't really do anything
+other than parse initrd, compared to something like grub which shows UI and stuff.

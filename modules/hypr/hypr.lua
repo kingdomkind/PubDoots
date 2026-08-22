@@ -17,7 +17,7 @@ return function(lib, args)
                 "brave-origin-bin",
                 "grimblast-git",
             },
-            ignore = {
+            pkgbuilds = {
                 "rose-pine-hyprcursor",
             }
         }
