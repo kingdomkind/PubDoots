@@ -13,6 +13,7 @@ return function(lib)
                 "lua-language-server",
                 "rust-analyzer",
                 "bash-language-server",
+                "typescript-language-server",
 
                 --> Formatters
                 "shfmt"

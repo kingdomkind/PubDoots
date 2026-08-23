@@ -128,6 +128,7 @@ do
         "glsl_analyzer",
         "pyright",
         "bashls",
+        "ts_ls",
     }
 
     for _, lsp in ipairs(lsps) do

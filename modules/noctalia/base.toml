@@ -182,3 +182,6 @@ background_opacity = 0.5
 
 [osd.keys]
 lock_keys = false
+
+[brightness]
+enable_ddcutil = true

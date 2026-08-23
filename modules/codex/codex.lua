@@ -2,13 +2,12 @@ return function(lib)
     return {
         desym = {
             symlinks = {
-                [lib.configd .. "noctalia/base.toml"] = { source = lib.cwd() .. "base.toml" }
+                [lib.configd .. "codex/config.toml"] = { source = lib.cwd() .. "config.toml" }
             }
         },
         depac = {
             packages = {
-                "noctalia",
-                "ddcutil",
+                "openai-codex",
             },
         }
     }

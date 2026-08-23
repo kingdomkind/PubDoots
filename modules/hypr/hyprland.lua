@@ -1,10 +1,8 @@
 local terminal = "kitty"
-local GAPS_OUT = 50;
 
 --> Exec Onces
 hl.on("hyprland.start", function()
     hl.exec_cmd("noctalia")
-    hl.exec_cmd("signal-desktop")
 end)
 
 --> Environment Vars
@@ -16,7 +14,7 @@ hl.env("GTK_THEME", "Adwaita:dark")
 hl.config({
     general = {
         gaps_in = 0,
-        gaps_out = GAPS_OUT,
+        gaps_out = 50,
         border_size = 0,
         allow_tearing = false,
         layout = "dwindle",
@@ -86,7 +84,7 @@ local b = "SUPER + SHIFT"
 local c = "SUPER + SHIFT + ALT"
 
 --> Non-compositor binds
-hl.bind(a .. "+D", hl.dsp.exec_cmd("brave-origin --enable-features=TouchpadOverscrollHistoryNavigation"))
+hl.bind(a .. "+D", hl.dsp.exec_cmd("glide-bin"))
 hl.bind(a .. "+B", hl.dsp.exec_cmd("firefox"))
 hl.bind(a .. "+Q", hl.dsp.exec_cmd(terminal))
 hl.bind(a .. "+N", hl.dsp.exec_cmd("alacritty"))
@@ -190,7 +188,7 @@ end
 
 --> Scratchpad Binds
 local scratchpad_apps = {
-    { "signal-desktop", "signal" },
+    { "signal-desktop --disable-features=WaylandWpColorManagerV1", "signal" },
 }
 
 hl.bind(a .. "+Z", hl.dsp.workspace.toggle_special("scratchpad"))

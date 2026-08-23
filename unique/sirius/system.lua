@@ -14,6 +14,8 @@ return function(lib)
         { lib.modulesd .. "mkinitcpio/mkinitcpio.lua", { source = lib.cwd() .. "mkinitcpio.conf", custom = { "multi-decrypt" } } },
         { lib.modulesd .. "scheds/scheds.lua",         { sched = "scx_lavd" } },
         lib.modulesd .. "autologin/autologin.lua",
+        lib.modulesd .. "glide/glide.lua",
+        lib.modulesd .. "codex/codex.lua",
         lib.uniqued .. "tablet/tablet.lua",
     })
 
@@ -66,7 +68,6 @@ return function(lib)
                 "downgrade",
                 "cuda",
                 "mold",
-                "openai-codex",
             },
 
             pkgbuilds = {
