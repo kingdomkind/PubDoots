@@ -57,6 +57,7 @@
 {
     // Change the hint size when you press "f"
     glide.o.hint_size = "20px";
+    glide.g.mapleader = ",";
 }
 
 // Tab behaviour
@@ -129,7 +130,7 @@
 
 // Cookie Whitelist
 {
-    const cookieWhitelist = ["github.com", "youtube.com", "sable.moe", "chatgpt.com", "openai.com",  "proton.me", "claude.com"];
+    const cookieWhitelist = ["github.com", "youtube.com", "sable.moe", "chatgpt.com", "openai.com",  "proton.me", "claude.ai"];
     async function makeCookieSessionOnly(cookie: Browser.Cookies.Cookie) {
         // Already a session only cookie
         if (cookie.session) {
