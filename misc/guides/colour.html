@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f7f6f2">
+  <title>HSL · Colour explorer</title>
+  <style>
+    * { box-sizing: border-box; }
+    :root { font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif; color: #282b28; background: #f7f6f2; }
+    body { margin: 0; min-height: 100svh; padding: 42px 6vw; }
+    header { display: flex; align-items: center; gap: 10px; font-size: 13px; font-weight: 650; letter-spacing: .04em; }
+    .brand { width: 20px; height: 20px; border-radius: 50%; background: conic-gradient(#ed6565, #e8d564, #7bc789, #6ac3cf, #8e83d5, #ed6565); }
+    main { max-width: 1020px; margin: 70px auto 0; }
+    .eyebrow { font-size: 11px; letter-spacing: .18em; font-weight: 650; color: #7a7e73; text-transform: uppercase; }
+    h1 { font-size: clamp(34px, 5vw, 52px); letter-spacing: -.055em; font-weight: 550; margin: 12px 0; }
+    .intro { color: #787c73; font-size: 15px; line-height: 1.7; margin: 0; }
+    .explorer { display: grid; grid-template-columns: 1.2fr 1fr; gap: 70px; align-items: center; margin-top: 45px; }
+    .diagram { position: relative; width: 100%; max-width: 470px; aspect-ratio: 1; padding: 30px; margin: auto; }
+    .wheel { position: relative; width: 100%; height: 100%; border-radius: 50%; touch-action: none; cursor: crosshair; }
+    canvas { width: 100%; height: 100%; display: block; border-radius: 50%; box-shadow: 0 12px 36px #2428210a; }
+    .overlay { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+    .angle { position: absolute; font-size: 11px; color: #85877e; font-variant-numeric: tabular-nums; }
+    .north { top: 5px; left: 50%; transform: translateX(-50%); }
+    .east { right: 0; top: 50%; transform: translateY(-50%); }
+    .south { bottom: 5px; left: 50%; transform: translateX(-50%); }
+    .west { left: 0; top: 50%; transform: translateY(-50%); }
+    .caption { text-align: center; color: #85877e; font-size: 12px; line-height: 1.7; margin: 14px 0 0; }
+    .controls { background: #fffefa; border: 1px solid #e7e7de; border-radius: 22px; padding: 30px; box-shadow: 0 8px 30px #292e1c03; }
+    .preview { display: flex; align-items: center; gap: 15px; border-bottom: 1px solid #eaeae2; padding-bottom: 26px; margin-bottom: 28px; }
+    .swatch { width: 56px; height: 56px; flex-shrink: 0; border-radius: 15px; border: 1px solid #0000000d; }
+    .preview .eyebrow { font-size: 10px; letter-spacing: .13em; }
+    #hex { font-size: 23px; font-weight: 500; letter-spacing: -.03em; margin-top: 4px; font-variant-numeric: tabular-nums; }
+    .control + .control { margin-top: 28px; }
+    .label { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 12px; font-size: 14px; font-weight: 550; }
+    output { font-variant-numeric: tabular-nums; font-size: 13px; font-weight: 450; color: #686e60; }
+    input[type=range] { display: block; width: 100%; height: 12px; border-radius: 8px; appearance: none; -webkit-appearance: none; margin: 0; cursor: pointer; border: 1px solid #0000000b; }
+    input[type=range]::-webkit-slider-thumb { appearance: none; width: 22px; height: 22px; background: white; border: 2px solid #3d4438; border-radius: 50%; box-shadow: 0 1px 4px #0002; }
+    input[type=range]::-moz-range-thumb { width: 18px; height: 18px; background: white; border: 2px solid #3d4438; border-radius: 50%; box-shadow: 0 1px 4px #0002; }
+    input:focus-visible { outline: 2px solid #464e3a; outline-offset: 6px; }
+    .hint { font-size: 11px; color: #898d82; margin: 10px 0 0; }
+    .code { margin-top: 28px; background: #f1f2eb; padding: 13px 10px; border-radius: 9px; text-align: center; font-family: ui-monospace, monospace; font-size: 12px; color: #626c55; }
+    footer { margin: 42px 0 20px; border-top: 1px solid #e1e3d9; padding-top: 21px; display: flex; gap: 24px; justify-content: space-between; color: #828779; font-size: 11px; line-height: 1.7; }
+    footer strong { color: #5f6757; font-weight: 550; }
+    @media (max-width: 740px) { body { padding: 25px 22px; } main { margin-top: 40px; } .explorer { grid-template-columns: 1fr; gap: 28px; margin-top: 25px; } .diagram { max-width: 390px; } .controls { padding: 25px; } footer { flex-direction: column; gap: 7px; margin-top: 30px; } }
+  </style>
+</head>
+<body>
+  <header><span class="brand" aria-hidden="true"></span> COLOUR / HSL</header>
+  <main>
+    <div class="eyebrow">An interactive colour study</div>
+    <h1>A little room for colour.</h1>
+    <p class="intro">Explore hue, saturation and lightness. See where your colour lives.</p>
+    <div class="explorer">
+      <section aria-label="HSL colour wheel">
+        <div class="diagram">
+          <span class="angle north">0°</span><span class="angle east">90°</span>
+          <span class="angle south">180°</span><span class="angle west">270°</span>
+          <div class="wheel" id="wheel">
+            <canvas id="canvas" width="640" height="640" role="img" aria-label="Colour wheel: hue increases clockwise from the top; saturation increases from centre to edge. Use the sliders to select a colour."></canvas>
+            <svg class="overlay" viewBox="0 0 400 400" aria-hidden="true">
+              <circle cx="200" cy="200" r="100" fill="none" stroke="white" stroke-opacity=".25" stroke-dasharray="2 5" />
+              <line id="radius" x1="200" y1="200" stroke="white" stroke-opacity=".65" stroke-width="1.5" />
+              <circle cx="200" cy="200" r="2.5" fill="white" fill-opacity=".8" />
+              <circle id="marker-shadow" r="9" fill="none" stroke="#20251e" stroke-opacity=".5" stroke-width="5" />
+              <circle id="marker" r="9" stroke="white" stroke-width="3" />
+            </svg>
+          </div>
+        </div>
+        <p class="caption">Drag on the wheel, or move the sliders.</p>
+      </section>
+      <section class="controls" aria-label="Colour controls">
+        <div class="preview"><div class="swatch" id="swatch" aria-hidden="true"></div><div><div class="eyebrow">Your colour</div><div id="hex"></div></div></div>
+        <div class="control"><div class="label"><label for="hue">Hue</label><output id="hue-value" for="hue"></output></div><input id="hue" type="range" min="0" max="360" value="155"><p class="hint">Around the circle</p></div>
+        <div class="control"><div class="label"><label for="saturation">Saturation</label><output id="saturation-value" for="saturation"></output></div><input id="saturation" type="range" min="0" max="100" value="65"><p class="hint">From the centre to the edge</p></div>
+        <div class="control"><div class="label"><label for="lightness">Lightness</label><output id="lightness-value" for="lightness"></output></div><input id="lightness" type="range" min="0" max="100" value="50"><p class="hint">Changes the brightness of the whole wheel</p></div>
+        <div class="code" id="hsl"></div>
+      </section>
+    </div>
+    <footer><span><strong>Angle = hue.</strong> Distance from centre = saturation.</span><span>The wheel is a slice of HSL at your chosen lightness.</span></footer>
+  </main>
+  <script>
+    const $ = id => document.getElementById(id);
+    const inputs = ['hue', 'saturation', 'lightness'].map($);
+    const canvas = $('canvas');
+    const context = canvas.getContext('2d');
+    const size = canvas.width;
+    const pixels = context.createImageData(size, size);
+    // Precompute the wheel's hue and saturation; only lightness redraws it.
+    const hues = new Float32Array(size * size);
+    const saturations = new Float32Array(size * size);
+    for (let y = 0; y < size; y++) {
+      for (let x = 0; x < size; x++) {
+        const i = y * size + x, dx = (x + .5 - size / 2) / (size / 2), dy = (y + .5 - size / 2) / (size / 2);
+        hues[i] = (Math.atan2(dx, -dy) * 180 / Math.PI + 360) % 360;
+        saturations[i] = Math.hypot(dx, dy);
+      }
+    }
+    function rgb(h, s, l) {
+      const a = s * Math.min(l, 1 - l);
+      return [0, 8, 4].map(n => {
+        const k = (n + h / 30) % 12;
+        return Math.round(255 * (l - a * Math.max(-1, Math.min(k - 3, 9 - k, 1))));
+      });
+    }
+    let previousLightness = -1;
+    function update() {
+      const [h, s, l] = inputs.map(input => Number(input.value));
+      const colour = `hsl(${h} ${s}% ${l}%)`;
+      $('hue-value').value = `${h}°`;
+      $('saturation-value').value = `${s}%`;
+      $('lightness-value').value = `${l}%`;
+      inputs.forEach((input, i) => input.setAttribute('aria-valuetext', `${[h, s, l][i]} ${i === 0 ? 'degrees' : 'percent'}`));
+      $('swatch').style.background = colour;
+      $('hsl').textContent = colour;
+      $('hex').textContent = '#' + rgb(h, s / 100, l / 100).map(v => v.toString(16).padStart(2, '0')).join('').toUpperCase();
+      $('hue').style.background = `linear-gradient(to right, ${[0, 60, 120, 180, 240, 300, 360].map(v => `hsl(${v} 100% 50%)`).join(',')})`;
+      $('saturation').style.background = `linear-gradient(to right, hsl(${h} 0% ${l}%), hsl(${h} 100% ${l}%))`;
+      $('lightness').style.background = `linear-gradient(to right, #000, hsl(${h} ${s}% 50%), #fff)`;
+      const radians = h * Math.PI / 180;
+      const x = 200 + Math.sin(radians) * s * 2, y = 200 - Math.cos(radians) * s * 2;
+      for (const id of ['marker', 'marker-shadow']) { $(id).setAttribute('cx', x); $(id).setAttribute('cy', y); }
+      $('marker').setAttribute('fill', colour);
+      $('radius').setAttribute('x2', x); $('radius').setAttribute('y2', y);
+      if (l !== previousLightness) {
+        for (let i = 0; i < hues.length; i++) {
+          const s = saturations[i];
+          if (s > 1) continue;
+          const channels = rgb(hues[i], s, l / 100);
+          pixels.data[i * 4] = channels[0]; pixels.data[i * 4 + 1] = channels[1]; pixels.data[i * 4 + 2] = channels[2]; pixels.data[i * 4 + 3] = 255;
+        }
+        context.putImageData(pixels, 0, 0);
+        previousLightness = l;
+      }
+    }
+    let frame;
+    function scheduleUpdate() { cancelAnimationFrame(frame); frame = requestAnimationFrame(update); }
+    inputs.forEach(input => input.addEventListener('input', scheduleUpdate));
+    const wheel = $('wheel');
+    function pick(event) {
+      const rect = wheel.getBoundingClientRect();
+      const x = (event.clientX - rect.left - rect.width / 2) / (rect.width / 2);
+      const y = (event.clientY - rect.top - rect.height / 2) / (rect.height / 2);
+      const distance = Math.hypot(x, y);
+      if (distance > .005) $('hue').value = Math.round((Math.atan2(x, -y) * 180 / Math.PI + 360) % 360);
+      $('saturation').value = Math.round(Math.min(1, distance) * 100);
+      scheduleUpdate();
+    }
+    wheel.addEventListener('pointerdown', event => {
+      if (!event.isPrimary || event.button !== 0) return;
+      wheel.setPointerCapture(event.pointerId); pick(event);
+    });
+    wheel.addEventListener('pointermove', event => { if (wheel.hasPointerCapture(event.pointerId)) pick(event); });
+    wheel.addEventListener('pointerup', event => { if (wheel.hasPointerCapture(event.pointerId)) { pick(event); wheel.releasePointerCapture(event.pointerId); } });
+    wheel.addEventListener('pointercancel', event => { if (wheel.hasPointerCapture(event.pointerId)) wheel.releasePointerCapture(event.pointerId); });
+    update();
+  </script>
+</body>
+</html>

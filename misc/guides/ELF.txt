@@ -1,0 +1,16 @@
+https://gist.github.com/x0nu11byt3/bcb35c3de461e5fb66173071a2379779
+
+ELF files have a header
+
+The header contains pointers to both the Program Header Table and the Section Header Table.
+
+The Program header table defines what part of the binary to load into the virtual memory, mapping parts of the
+ELF binary to the virtual address space. Each entry in this table is called a segment. Segments can define
+permissions for the virtual memory it maps. It may say for example, this memory is read-only now, or that it is
+read-write. Hence, multiple segments are needed to encompass the different levels. Usually a segment will specify
+a byte range that encompasses multiple sections of the binary, to load into virtual memory. However, this relationship
+is purely transitive; the segment does not use the section name, it just does byte offsets + sizes.
+
+The section header table points to 'sections' of the ELF binary, and gives them names. They don't really do anything,
+other than annotation so other tools can see what each part means. Like it may label one section .text.
+Symbol tables exist here, for example, and debug info.

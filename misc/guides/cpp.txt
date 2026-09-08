@@ -13,3 +13,52 @@ Requires can either be used as
 
     you will see requires requires {} because the first requires is the statement / clause, the latter is the expression.
     I could do requires (myfunction()) given that myfunction is constexpr
+
+
+#> Modules
+Modules are split into two categories, interfaces and implementation units.
+Interfaces are the `export` module, and implementation units are ones without export.
+Declarations in an implementation unit are not visible outside of that implementation unit, but can implement definitions for interface units.
+Every interface, implementation unit, etc is its own TU.
+
+Further, there are "module partitions", which are basically the same as a new module,
+but are seen as related to the main module, resulting in the following:
+
+Full modules cannot add further definitions, nor declarations owned by another module. For example, if module A declared struct ass,
+module B could not implement that for module A (it could however, obviously, import and use it).
+
+Module A would need an implementation unit, or a partition unit could also implement struct ass, since it's part of the same module.
+Partitions can also have interface and implementation units, it is in essence just a standalone module, but has internal access to the
+module it is a partition of
+
+https://vector-of-bool.github.io/2019/10/07/modules-3.html - Module fragments, modules linkage, purview
+The term "named module" means a module with a name - which is all of them other than the global module;
+Non-module TU's are part of the global module, and anything before the export module is also part of the global module (and is not part of that named module).
+The global module is essentially the "default" module. We're calling it module, but it really isn't a module. If it was a module,
+then doing global variables should give module linkage (since we can't use export), but they give external linkage instead.
+So it's called the global module, but in reality, it's moreso the default "legacy" processing environment.
+
+When you do module;, those two tokens tell the compiler we're compiling a module, but we have some non-module code first, which ends
+when we hit (export) module ...; The stuff inbetween is part of the global module, however, when being compiled as part of a module,
+it is limited solely to pre-processor directives.
+
+Alongside the global module fragment, and the regular module fragment, also exists the private module fragment (declared with module :private).
+Read the former article for an explanation on it, seems fairly useless. However, it guarantees that changing the private module fragment will not
+cause importers of that module to recompile.
+
+#> Linkage
+Most variables in the global namespace have external linkage by default (no need for extern to define that, only for stuff like constexpr,
+where it's internal by default, would you want extern). 
+
+Variables in global scope automatically are defualt initialised (unlike ones that are, int i; in the global namespace will == 0).
+(https://medium.com/@tick-to-trade/understanding-local-and-global-variables-in-c-b405145d1d69)
+Hence variables in global namespaces also allocate data. To avoid this behaviour, you can use the extern keyword, which means to not do this.
+Hence extern does 2 things, say to use external linkage, and to not define the variable, unless it is explicitly defined.
+
+Eg. extern constexpr int i; would have external linkage and no definiton, but extern constexpr int i = 1; would have a definition (it was explicit)
+
+https://learn.microsoft.com/en-us/cpp/cpp/program-and-linkage-cpp?view=msvc-170 - linkage explanation
+    -> Each TU has a symbol table, essentially declarain what symbols it provides, and what symbols it needs
+
+There is also a new 'module linkage', given internal means within one TU, external means within all TUs, module linkage means within all TUs related
+to that module. Global variables in a module, have module linkage.

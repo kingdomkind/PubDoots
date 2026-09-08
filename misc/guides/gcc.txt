@@ -1,0 +1,61 @@
+
+
+Architecture:
+
+gcc/cp/modules.cc
+
+Logic for c++ modules
+entity_ary, is an array of binding slots, where a binding slot is a lazily loaded declaration which belongs to a module. entity_ary is a flat array, not a 2d array.
+So slots 0-3 may be declarations belonging to module A, and slots 4-6 may be declarations belonging to module B. By lazily loaded, I mean that it isn't actually
+deserialised from the pcm cache until it is used (hence unused declarations don't bloat compile times).
+
+Important to note that modules operate at compile time not link time. They must operate at compile time, since how else would you resolve what an imported module
+declares (as you just write import A; the declarations for what you can use are unknown, nevermind their definitions).
+
+A CMI is literally just an ELF file, abusing the section header table and sections. Keeping in mind a CMI is only related to one module:
+For each TU within a module, you can have declarations that circularly reference other ones. Por ejemplo:
+
+struct B;
+struct A { B* b; };
+struct B { A* a; };
+
+These are called "SCC"s, strongly connected components (this means cycle, i'm not sure why it isn't just called a cycle).
+If we were to write struct A into a section in the CMI ELF, we could not deserialise A without B too.
+The same going for B. Since you'd always end up having to deserialise both to read either, every SCC is just stored in
+one section. Things that don't have cycles (non-SCC's), will be stored in their own sections.
+
+The fact we're storing multiple declarations in one section doesn't really matter, because when we load a section,
+all the relevant binding slots are overwritten, so all the relevant declarations that were loaded, are set at once.
+
+Alongside these sections, the CMI contains a "binding table" section. This maps each namespace@name, to a specific section
+in the ELF. When importing a module, i assume this binding table section is read, and that is how the initialy eneity_ary array is built,
+eagerly since it can just count all the names. Hence, also works in reverse. When trying to resolve a symbol, you can see if it exists
+in this binding table, and hence resolve it if it does, and you know exactly where to put it in the binding slots.
+
+Notice that the binding slots, could potentially refer to the same entity. For example, if two different modules both declare X, then
+X will be twice in the entity_ary, when it should *somehow* be one.
+
+ELF CMI section format:
+
+/* Use ELROND format to record the following sections:
+     qualified-names	    : binding value(s)
+     MOD_SNAME_PFX.README   : human readable, strings
+     MOD_SNAME_PFX.ENV      : environment strings, strings
+     MOD_SNAME_PFX.nms      : namespace hierarchy
+     MOD_SNAME_PFX.udi      : namespace using-directives
+     MOD_SNAME_PFX.bnd      : binding table
+     MOD_SNAME_PFX.spc      : specialization table
+     MOD_SNAME_PFX.imp      : import table
+     MOD_SNAME_PFX.ent      : entity table
+     MOD_SNAME_PFX.prt      : partitions table
+     MOD_SNAME_PFX.olm      : ordinary line maps
+     MOD_SNAME_PFX.mlm      : macro line maps
+     MOD_SNAME_PFX.def      : macro definitions
+     MOD_SNAME_PFX.mac      : macro index
+     MOD_SNAME_PFX.ini      : inits
+     MOD_SNAME_PFX.cnt      : counts
+     MOD_SNAME_PFX.cfg      : config data
+*/
+
+decl.cc - 20300
+lambda.cc - 1661

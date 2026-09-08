@@ -1,0 +1,74 @@
+#> Gamuts
+Gamuts are formed from 3 primary colours. Together these 3 colours form a triangle, of which all colours within that triangle can be represented by mixing the 3 colours.
+These three colours, are points on the chromaticity diagram (nm wavelength of light the human eye can see), an explanation of which can be seen here: https://www.youtube.com/watch?v=O0nYJ0Mjx10
+The way the chromaticity diagram is initially formed: https://www.youtube.com/watch?v=J8V9w9Et19s
+Chromaticity is purely hue and saturation, it does not encode lightness.
+
+
+A colour space has a gamut, and a way to map lightness.
+sRGB is defined as chromaticity red (0.64, 0.33), green (0.3, 0.6), blue (0.15, 0.06)
+At its peak lightness it is 80 nits (per spec, monitors usually scale this up to whatever brightness they can support)
+
+Rec.709 is basically the same, but just different lightness reference (although monitors scale this up too, so it's practically the same)
+
+#> HSL
+The latter video also explains HSL 
+Hue is the position around the colour wheel on the edge, measured from 0 to 360 degrees. It is the "pure" colour, eg 0 degrees
+is red, 120 degrees is green etc.
+
+Saturation is the colour intensity. 0% meaning no hue is applied, and 100% meaning full hue.  
+
+Lightness is lerping the entire wheel to black or to white. 50% means no lerp, 100% means fully lerped to white, 0% fully lerped to black.
+Lerp, meaning linear interpolation.
+
+You can mess around with HSL in colour.html - this is completely ai generated, but it's just a colour wheel so who cares
+
+#> SDR
+SRGB is a colour space, mentioned above.
+In 8 bit form, each channel is 8  bits, meaning the true red is 255.
+You map channels from 0-1 to 0-255 before sending them to the monitor. For example 0.1 may mean 26 in bit terms, and 1 meaning 255 in bit terms.
+
+RGB(0.1, 0.2, 0.3) would be RGB(26, 51, 77). Notice how 0.1 is 26, and 0.2 is 51. Between this range, where the brightness increases by 100%, there are only 25 discrete steps.
+In the same range from 0.9 to 1.0, where the brightness only increases by 22.2%, has the same 25 discrete steps.
+
+Our eyes cannot easily tell the difference between 0.9 (230) and 1.0 (255), or 0.95 (243), and 0.94 (240), yet they all have discrete values and are still precise, with a lange range.
+However, our eyes can easily tell the difference between 0.1(26) and 0.2(51) and 0.11(28) and 0.103(26).
+There is the same precision for and range for this, which we can much more easily tell since it's a 100% increase.
+
+Hence we, map the 0-1 values to extend the precision / range of darkness, by target^1/2.4 (0.42, I will use this for simplicity).
+So if we want 0.1 brightness on the red channel, we do 0.1^0.42 = 0.383 (98). If we want 0.2, 0.2^0.42 = 0.511(130).
+So the steps from 0.0 to 0.1 are now 98 rather than 26, and from 0.1 to 0.2 it is now 32 rather than 25. We've given more steps to lower brightnesses.
+Equally, 0.9^0.42 = 244, and 1.0 = 255, so the range from 0.9 to 1.0 has decreased from 25 to just 11, which is fine as this is a lower ratio difference in brightness.
+The exponent as you can see fractional as that makes decimal numbers that are smaller, disproportionately bigger.
+
+However, obviously if we just send the differently scaled numbers to the monitor, it would just change the brightness level, rather than 'decoding' it back to the original value we had before doing ^1/2.4.
+Great news, monitors infact do this decoding by taking whatever RGB value you sent, eg. 130, 130, 130, converting it back to 0-1 range (by dividing 255), so 0.509, 0.509, 0.509 and then it does ^2.4 (the inverse of ^1/2.4) to each channel.
+So 0.509^2.4 becomes 0.1985, which is back to the 0.2 we originally wanted to send. The exponent they use is the number in gamma2.4, or gamma2.2 if they use an exponent of 2.2. Hence you need to match your 1/exponent before mapping it initially.
+
+With 10 bits, the idea is the same, except instead of the max being 255, it is now 1024. So ultimately the display gets back eg. 0.4, 0.3. 0.6, meaning, display red at 40% power, green 30% and blue 60%.
+1,1,1 and 255,255,255 are the same chromaticity, just different lightness.
+
+#> HDR
+HDR is very similar, except it works in absolute nits, rather than relative powers. Its mapping function is called PQ, and it is to HDR what the exponent is to SDR.
+PQ values relate to absolute nits, rather than a % of the display. Like how you could get a decoded 10 bit of 50%, the PQ would get an absolute nit value eg. 143nits.
+
+10 bit (one colour channel, still have r,g,b)   Nits of that channel
+0                                               0
+64                                              0.1
+257                                             6
+923                                             3987
+Full table: https://dolby.my.site.com/professionalsupport/s/article/Dolby-Vision-HDR-Display-Evaluation-Guideline?language=en_US
+The mapping equation can be found at: https://www.itu.int/dms_pubrec/itu-r/rec/bt/R-REC-BT.2100-0-201607-S%21%21PDF-E.pdf, table 4.
+
+So if we have 520 520 520, that just means emit 100 nits red, 100 nits green, 100 nits blue for the RGB LED at that pixel. Let's say it wants us to emit 1000, 1200, 900 nits each but our display maxxes out at 500 per LED colour. This is where tone-mapping comes into play. Instead of just maxxing out at 500 each and losing accuracy (unable to represent colours as different colours, beyond 500 500 500), "you apply a nonlinear remapping curve that gradually "rolls off" as you approach the display's max — compressing a wide input range into a narrower output range, but smoothly, preserving relative differences (even if compressed) rather than flattening them entirely."
+
+Eg a potential remapping for 500 nit displays
+Source  Output
+100	    95
+300	    260
+500	    380
+700	    430
+1000	460
+4000    495
+
+The tone-mapping curve can be static just once for the entire content, or it can be per frame (dynamic)

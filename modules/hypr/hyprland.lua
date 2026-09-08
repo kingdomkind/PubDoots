@@ -84,7 +84,7 @@ local b = "SUPER + SHIFT"
 local c = "SUPER + SHIFT + ALT"
 
 --> Non-compositor binds
-hl.bind(a .. "+D", hl.dsp.exec_cmd("glide-bin"))
+hl.bind(a .. "+D", hl.dsp.exec_cmd("brave-origin --disable-features=WaylandWpColorManagerV1"))
 hl.bind(a .. "+B", hl.dsp.exec_cmd("firefox"))
 hl.bind(a .. "+Q", hl.dsp.exec_cmd(terminal))
 hl.bind(a .. "+N", hl.dsp.exec_cmd("alacritty"))
