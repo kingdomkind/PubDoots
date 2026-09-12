@@ -16,7 +16,17 @@ return function(hostname)
             source = content,
             uid = 0,
             gid = 0,
-            mode = self.mode
+            mode = tonumber("644", 8)
+        }
+    end
+
+    function patch:root_binary(content)
+        return
+        {
+            source = content,
+            uid = 0,
+            gid = 0,
+            mode = tonumber("755", 8)
         }
     end
 
@@ -26,7 +36,7 @@ return function(hostname)
             source = content,
             uid = self.uid,
             gid = self.gid,
-            mode = self.mode,
+            mode = tonumber("644", 8),
         }
     end
 

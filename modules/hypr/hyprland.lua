@@ -14,7 +14,7 @@ hl.env("GTK_THEME", "Adwaita:dark")
 hl.config({
     general = {
         gaps_in = 0,
-        gaps_out = 50,
+        gaps_out = 0,
         border_size = 0,
         allow_tearing = false,
         layout = "dwindle",
@@ -79,39 +79,44 @@ hl.animation({ leaf = "fadeLayersOut", enabled = false })
 hl.animation({ leaf = "workspaces", enabled = true, speed = 6, bezier = "default" })
 
 --> Binds
-local a = "SUPER"
-local b = "SUPER + SHIFT"
-local c = "SUPER + SHIFT + ALT"
+local x = {
+    a = "SUPER",
+    b = "SUPER + SHIFT",
+    d = "SUPER + CTRL",
+    e = "SUPER + SHIFT + CTRL",
+
+    c = "SUPER + SHIFT + ALT",
+}
 
 --> Non-compositor binds
-hl.bind(a .. "+D", hl.dsp.exec_cmd("brave-origin --disable-features=WaylandWpColorManagerV1"))
-hl.bind(a .. "+B", hl.dsp.exec_cmd("firefox"))
-hl.bind(a .. "+Q", hl.dsp.exec_cmd(terminal))
-hl.bind(a .. "+N", hl.dsp.exec_cmd("alacritty"))
-hl.bind(a .. "+A", hl.dsp.exec_cmd("cosmic-files"))
-hl.bind(a .. "+X", hl.dsp.exec_cmd(terminal .. " -e yazi"))
-hl.bind(a .. "+U", hl.dsp.exec_cmd("env QT_SCALE_FACTOR=1.5 krita"))
-hl.bind(a .. "+PAGE_UP", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"), { repeating = true })
-hl.bind(a .. "+PAGE_DOWN", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"), { repeating = true })
+hl.bind(x.a .. "+D", hl.dsp.exec_cmd("brave-origin --disable-features=WaylandWpColorManagerV1"))
+hl.bind(x.a .. "+B", hl.dsp.exec_cmd("firefox"))
+hl.bind(x.a .. "+Q", hl.dsp.exec_cmd(terminal))
+hl.bind(x.a .. "+N", hl.dsp.exec_cmd("alacritty"))
+hl.bind(x.a .. "+A", hl.dsp.exec_cmd("cosmic-files"))
+hl.bind(x.a .. "+X", hl.dsp.exec_cmd(terminal .. " -e yazi"))
+hl.bind(x.a .. "+U", hl.dsp.exec_cmd("env QT_SCALE_FACTOR=1.5 krita"))
+hl.bind(x.a .. "+PAGE_UP", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"), { repeating = true })
+hl.bind(x.a .. "+PAGE_DOWN", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"), { repeating = true })
 
 --> Compositor binds
-hl.bind(a .. "+C", hl.dsp.window.close())
-hl.bind(a .. "+F", hl.dsp.window.fullscreen())
-hl.bind(b .. "+F", hl.dsp.window.fullscreen_state({ internal = 0, client = 2, action = "toggle" }))
-hl.bind(a .. "+bracketright", hl.dsp.layout("togglesplit"))
-hl.bind(a .. "+bracketleft", hl.dsp.layout("swapsplit"))
-hl.bind(a .. "+V", hl.dsp.window.float({ action = "toggle" }))
-hl.bind(c .. "+M", hl.dsp.exit())
-hl.bind(a .. "+right", hl.dsp.window.resize({ x = 30, y = 0, relative = true }), { repeating = true })
-hl.bind(a .. "+left", hl.dsp.window.resize({ x = -30, y = 0, relative = true }), { repeating = true })
-hl.bind(a .. "+up", hl.dsp.window.resize({ x = 0, y = -30, relative = true }), { repeating = true })
-hl.bind(a .. "+down", hl.dsp.window.resize({ x = 0, y = 30, relative = true }), { repeating = true })
-hl.bind(a .. "+mouse:272", hl.dsp.window.drag(), { mouse = true })
-hl.bind(a .. "+mouse:273", hl.dsp.window.resize(), { mouse = true })
+hl.bind(x.a .. "+C", hl.dsp.window.close())
+hl.bind(x.a .. "+F", hl.dsp.window.fullscreen())
+hl.bind(x.b .. "+F", hl.dsp.window.fullscreen_state({ internal = 0, client = 2, action = "toggle" }))
+hl.bind(x.a .. "+bracketright", hl.dsp.layout("swapsplit"))
+hl.bind(x.a .. "+bracketleft", hl.dsp.layout("togglesplit"))
+hl.bind(x.a .. "+V", hl.dsp.window.float({ action = "toggle" }))
+hl.bind(x.c .. "+M", hl.dsp.exit())
+hl.bind(x.a .. "+right", hl.dsp.window.resize({ x = 30, y = 0, relative = true }), { repeating = true })
+hl.bind(x.a .. "+left", hl.dsp.window.resize({ x = -30, y = 0, relative = true }), { repeating = true })
+hl.bind(x.a .. "+up", hl.dsp.window.resize({ x = 0, y = -30, relative = true }), { repeating = true })
+hl.bind(x.a .. "+down", hl.dsp.window.resize({ x = 0, y = 30, relative = true }), { repeating = true })
+hl.bind(x.a .. "+mouse:272", hl.dsp.window.drag(), { mouse = true })
+hl.bind(x.a .. "+mouse:273", hl.dsp.window.resize(), { mouse = true })
 
 --> Screenshots Binds
-hl.bind(a .. "+S", hl.dsp.exec_cmd("grimblast --freeze copy area"))
-hl.bind(b .. "+S",
+hl.bind(x.a .. "+S", hl.dsp.exec_cmd("grimblast --freeze copy area"))
+hl.bind(x.b .. "+S",
     hl.dsp.exec_cmd(
         "grimblast --freeze --filetype ppm save area - | satty --filename - --copy-command \"wl-copy\" --early-exit --fullscreen --initial-tool brush"))
 
@@ -139,59 +144,17 @@ local function toggle_noctalia()
     end
 end
 
-hl.bind(a .. "+SPACE", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"))
-hl.bind(a .. "+R", hl.dsp.exec_cmd("noctalia msg wallpaper-random"))
-hl.bind(c .. "+0", hl.dsp.exec_cmd("noctalia msg panel-toggle session"))
-hl.bind(a .. "+E", toggle_noctalia)
-
---> Workspace Binds
-local WORKSPACE_PER_MONITOR_COUNT = 10;
-
-local function map_workspace(workspace)
-    local monitors = hl.get_monitors()
-    for i, m in ipairs(monitors) do
-        if m.focused then
-            return workspace + ((i - 1) * WORKSPACE_PER_MONITOR_COUNT)
-        end
-    end
-end
-
--- This sets the defualt workspace per monitor
--- hl.get_monitors() doesn't return anything on config load, it's empty
--- Instead, we listen to monitor added and manually set the target workspace to the monitor
-hl.on("monitor.added", function(monitor)
-    hl.dispatch(hl.dsp.focus({
-        monitor = monitor.name,
-    }))
-
-    hl.dispatch(hl.dsp.focus({
-        workspace = tostring(map_workspace(1)),
-        on_current_monitor = true,
-    }))
-end)
-
-for i = 1, 9 do
-    hl.bind(a .. "+" .. i, function()
-        hl.dispatch(hl.dsp.focus({
-            workspace = map_workspace(i),
-            on_current_monitor = true,
-        }))
-    end)
-
-    hl.bind(b .. "+" .. i, function()
-        hl.dispatch(hl.dsp.window.move({
-            workspace = map_workspace(i),
-            follow = false,
-        }))
-    end)
-end
+hl.bind(x.a .. "+SPACE", hl.dsp.exec_cmd("noctalia msg panel-toggle launcher"))
+hl.bind(x.a .. "+R", hl.dsp.exec_cmd("noctalia msg wallpaper-random"))
+hl.bind(x.c .. "+0", hl.dsp.exec_cmd("noctalia msg panel-toggle session"))
+hl.bind(x.a .. "+E", toggle_noctalia)
 
 --> Scratchpad Binds
 local scratchpad_apps = {
     { "signal-desktop --disable-features=WaylandWpColorManagerV1", "signal" },
 }
 
-hl.bind(a .. "+Z", hl.dsp.workspace.toggle_special("scratchpad"))
+hl.bind(x.a .. "+Z", hl.dsp.workspace.toggle_special("scratchpad"))
 for _, v in ipairs(scratchpad_apps) do
     hl.window_rule({ match = { class = v[2] }, workspace = "special:scratchpad" })
 end
@@ -207,9 +170,8 @@ hl.workspace_rule({
     on_created_empty = cmd,
 })
 
-
 local f = io.open(os.getenv("HOME") .. "/.config/hypr/hyprext.lua", "r")
 if f then
     f:close()
-    require("hyprext")
+    require("hyprext")(x)
 end

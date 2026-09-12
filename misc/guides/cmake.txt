@@ -7,3 +7,6 @@ Cmake revolves around targets, of which there are two primary types:
 
 Commands revolve around modifying targets
 
+
+target_sources: https://cmake.org/cmake/help/latest/command/target_sources.html
+    -> File sets are just the "name" of the collection of files we are adding.

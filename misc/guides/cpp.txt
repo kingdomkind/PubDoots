@@ -1,3 +1,5 @@
+https://gcc.gnu.org/onlinedocs/gcc/Overall-Options.html
+
 #> Requires
 
 Requires can either be used as
@@ -18,24 +20,81 @@ Requires can either be used as
 #> Modules
 Modules are split into two categories, interfaces and implementation units.
 Interfaces are the `export` module, and implementation units are ones without export.
-Declarations in an implementation unit are not visible outside of that implementation unit, but can implement definitions for interface units.
-Every interface, implementation unit, etc is its own TU.
+Declarations in an non-partition implementation unit are not visible outside of that implementation unit, but can implement definitions for interface units.
+Every interface, implementation unit, etc is its own TU. Implementatiion units implicitly import the main module.
 
-Further, there are "module partitions", which are basically the same as a new module,
-but are seen as related to the main module, resulting in the following:
+Further, there are "module partitions", which is a new TU, but semantically the same as the primary interface unit.
+Module partitions do not implicitly import the main module (nor do partition implementation units).
+The main module has to import them explicitly.
+When importing a module partition, interface or not, into the module, all the members (including the non-exported ones) are visible.
+The "interface" just means that the main module must re-export that partition, and as such, expose its exported members.
+You cannot control member visibility within a module partition.
 
 Full modules cannot add further definitions, nor declarations owned by another module. For example, if module A declared struct ass,
 module B could not implement that for module A (it could however, obviously, import and use it).
 
-Module A would need an implementation unit, or a partition unit could also implement struct ass, since it's part of the same module.
-Partitions can also have interface and implementation units, it is in essence just a standalone module, but has internal access to the
-module it is a partition of
+Module A would need an implementation unit, or a partition unit could also implement struct ass, since they're all part of the same module.
+
+Partitions solve something else.
+Imagine we have Server and Client classes, both of which reference eachother.
+You could do:
+Partition A:
+class Server;
+class Client {
+    Server* server;
+};
+
+Partition B:
+class Client;
+class Server {
+    Client* client;
+}
+
+Primary:
+import :A;
+import :B;
+
+As you can see these are circular definitions. And partitions let us forward declare, of which
+those forward declarations are later specified by another partition.
+We could write this in the primary implementation unit just like:
+
+class Server;
+class Client {
+    Server* server;
+}
+class Server {
+    Client* client;
+}
+
+But then they both have to be in the same file. Partition units, literally just let us split it across the file, and that's the purpose they serve.
+Because there is only one primary interface file, how else would you do it? You couldn't use separate modules like:
+
+Module A:
+class Server;
+class Client {
+    Server* server;
+};
+
+Module B:
+class Client;
+class Server {
+    Client* client;
+}
+
+Module C:
+import A;
+import B;
+
+Because a module cannot further specify the declaration of another module. Those two servers and two clients are different entities altogether, there is no
+module linking occuring (described later) to merge the declarations, like there are within the same module, which partitions are. So, they only thing they share
+is the name, the compiler doesn't see them as the same entity, like it does within a module (because of module linkage)
 
 https://vector-of-bool.github.io/2019/10/07/modules-3.html - Module fragments, modules linkage, purview
 The term "named module" means a module with a name - which is all of them other than the global module;
 Non-module TU's are part of the global module, and anything before the export module is also part of the global module (and is not part of that named module).
+That sounds like they're part of one module, but they're not, they're compiled in whatever TUs they were written in.
 The global module is essentially the "default" module. We're calling it module, but it really isn't a module. If it was a module,
-then doing global variables should give module linkage (since we can't use export), but they give external linkage instead.
+then doing global variables should give module linkage (since we can't use export), but they give external linkage instead (ie. other programs can link to the definitions).
 So it's called the global module, but in reality, it's moreso the default "legacy" processing environment.
 
 When you do module;, those two tokens tell the compiler we're compiling a module, but we have some non-module code first, which ends
@@ -61,4 +120,75 @@ https://learn.microsoft.com/en-us/cpp/cpp/program-and-linkage-cpp?view=msvc-170 
     -> Each TU has a symbol table, essentially declarain what symbols it provides, and what symbols it needs
 
 There is also a new 'module linkage', given internal means within one TU, external means within all TUs, module linkage means within all TUs related
-to that module. Global variables in a module, have module linkage.
+to that module. Global variables in a module, have module linkage. Partitions still count as being part of the module, and share module linkage with
+that module.
+
+For example with internal linkage you would expect:
+class Server;
+class Server {
+    int a;
+};
+
+to define the same entity, and not be two different entities - as their names and namespaces are the same. Similarly, across TU's but in the same module
+you could do:
+
+partition A:
+class Server;
+
+partition B;
+class Server {
+    int a;
+};
+
+And this would modify the same Server entity, just like the internal linkage in the same TU would.
+Of course, things can only see what have been processed so far.
+
+class Server;
+std::println("{}", Server.a); // (Ignore object creation), obviously this would be invalid
+class Server {
+    int a;
+}
+
+Just like that would be invalid, things that only import A cannot see what B has defined for it.
+
+#> Lvalues and Rvalues
+Lvalues are values with stable, addressable memory locations.
+Rvalues are values with non-stable, non-addressable memory locations.
+
+Hence, you can see Lvalues to be anything you can refer to, and Rvalues to be temporaries.
+Anything with a name is an Lvalue - even if it points to an rvalue.
+
+
+MyClass&& thing = MyClass();
+You may think this is invalid, since how can you have a named temporary. Fear not, for this is an Lvalue because it is named now,
+the && means it is a reference to a temporary object.
+
+MyClass&& thing = MyClass() // Valid
+const MyClass&& thing = MyClass() // Valid
+MyClass& thing = MyClass() // Invalid - non-const Lvalue references cannot bind to temporaries
+const MyClass&& = MyClass() // Valid
+
+These work because the temporary undergoes lifetime extension, the lifetime of the temporary is now the same as their reference. Note that the reference itself (&& or &) is an Lvalue,
+but the object it points to can be an Lvalue or Rvalue itself (remembering that Rvalues can have non-user addressable storage, that the compiler itself can address).
+
+Realistically they'll probably optimise to MyClass thing = MyClass(makeExpensiveArgs()); anyway, since a temporary which matches
+the lifetime of its Lvalue reference may aswell be an Lvalue.
+
+To summarise:
+& is a reference to an Lvalue
+const & extends this, and can reference an Lvalue or Rvalue
+
+&& is a reference solely to an Rvalue.
+
+&        --> Lvalues Only
+const &  --> Lvalues or Rvalues
+&&       --> Rvalues only
+const && --> Rvalues only
+
+std::forward<>() is to parameter packs what std::move() is to normal variables. It allows you to move the entire parameter pack like std::forward<PackType>(pack)...
+
+Remember, both Rvalues and Lvalues have backing storage - it is just that Rvalues do not have named backing storage. Hence, just like how you can do a reference
+to an Lvalue, you can do a reference to an rvalue, following the arbitary rules above. The main use of it is in function signatures, as && will mean they need
+to pass in temporaries, so you can steal their guts. Their usage in return values is mostly just a side effect, like an Lvalue pointing to an Rvalue, whose
+Rvalue's length has been extended to the length of the Lvalue sounds awfully just like an Lvalue to me.
+

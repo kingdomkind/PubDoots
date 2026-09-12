@@ -1,8 +1,0 @@
-# ~/.codex/config.toml
-default_permissions = "tmp-only"
-
-[permissions.tmp-only]
-extends = ":read-only"
-
-[permissions.tmp-only.filesystem]
-"/tmp" = "write"

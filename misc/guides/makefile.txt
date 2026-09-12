@@ -1,0 +1,96 @@
+#> BASICS
+
+rules:
+
+target list : dependency list
+    comands
+
+This is called a rule. If you have multiple targets, use &:
+
+e.g.
+
+main main2 &: main.c main2.c
+    gcc main.c -o main
+    gcc main2.c -o main2
+
+or
+
+main : main.c
+    gcc main.c -o main
+
+
+if dependency list is newer than the target list, then the rule will be re-ran.
+For example, if main.c 11th July, and main is 10th July, then the rule will be re-ran.
+If main does not exist, then the rule will be re-ran.
+
+Target list is the outputs, dependency list is the inputs.
+
+Rules are aware of other rules. When you run a target in a rule, it first checks if any of the dependencies,
+are targets of any other rules, and if so runs them first. This occurs recursively.
+
+e.g.
+
+compiled : main.c
+    gcc -c main.c -o compiled
+
+linked : compiled
+    gcc main.compiled -o linked
+
+
+Running linked, will also run compiled. Remember the rule names, are infact the target list.
+
+variables:
+
+name = value #> Set the variable, when it is used
+name := value #> Set the variable immediately, at declaration 
+name ?= value #> Only set the variable if it is unset
+name += value #> Append to the variable, with a space inserted inbetween by default
+
+You can then use the variables later either with $(name) or ${name}, it makes no difference.
+$() and ${} are the expansion syntax, i.e. to process them not as raw strings.
+
+Make variables are also automatically created from the environment variables you put into make.
+Eg. you will have $(PATH)
+
+Make also has some builtin variables that are just $name.
+
+#> RUNNING 
+
+Running a bare `make` will run the first target in the first rule. By that I mean, the first rule runs,
+but it will just run the dependency rules for that first target.
+
+Running a `make target_name_1 target_name_2` will run the rules which have the target in their target list.
+The same applies as mentioned above, only the targets mentioned will have their dependency rules ran.
+
+
+#> FUNCTIONS
+function_name argument1,argument2,argument3
+
+A common one:
+wildcard *.c, where *.c is a variable
+
+#>  OMITTING &:
+
+If you omit &:, it will essentially treat it as a shorthand for copying and pasting that rule, for every target, repeating the rule for each target.
+
+e.g.
+
+main main2 : main.c main2.c
+    gcc main.c -o main
+    gcc main2.c -o main2
+
+becomes
+
+main : main.c main2.c
+    gcc main.c -o main
+    gcc main2.c -o main2
+
+main2 : main.c main2.c
+    gcc main.c -o main
+    gcc main2.c -o main2
+
+which probably isn't what you intended.
+You can see which target was used however in the initial rule body, with the $@ variable
+
+Pattern rules (%): https://www.gnu.org/software/make/manual/html_node/Pattern-Intro.html
+https://makefiletutorial.com/
