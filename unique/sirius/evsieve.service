@@ -1,0 +1,5 @@
+type = process
+command = /usr/local/sbin/evsieve
+depends-on = udev-settle
+restart = true
+log-type = buffer

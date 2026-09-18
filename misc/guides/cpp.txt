@@ -192,3 +192,96 @@ to an Lvalue, you can do a reference to an rvalue, following the arbitary rules 
 to pass in temporaries, so you can steal their guts. Their usage in return values is mostly just a side effect, like an Lvalue pointing to an Rvalue, whose
 Rvalue's length has been extended to the length of the Lvalue sounds awfully just like an Lvalue to me.
 
+#> Virtual Address Space
+Virtual address space is an address space which your program has access to, which has theoretically 2^64 addresses (alth9ough linux won't expose a number as large as this), each one pointing to a byte.
+Linux (usually) lazily maps (ie. on read / write) these to real RAM, through a page table.
+
+For example, if you write to address 5000, WRONG YOU MUST MAP IT FIRST ,MANUALLY https://www.gabriel.urdhr.fr/2015/01/22/elf-linking/ linux will allocate a perhaps 64KB sized page somewhere
+in ram (depends on your page size, 64KB i just made up, it's usually more like 4 KiB), and then map it to your address space from address 0 to address 64000. Address 5000 will now write to that page,
+backed by physical ram.
+
+If you write to address 128001, linux will map another 64KB page to address 128000 to 192000 in your virtual address space. Notice how the pages are aligned to
+their page sizes.
+
+mmap is a syscall, which maps some data from an fd into your virtual address space.
+
+#> CV Qualification
+
+cv qualification, literlaly just means anything marked as "const", or as "volatile". Volatile means that the object's value may change without the compiler knowing about it, and so it may
+disable certain optimisations, like caching values in registers.
+
+#> Reflection
+
+std::meta::info is a type, which represents represents the reflection of any entity (an entity being: An entity is a value, object, reference, structured binding, function, enumerator, type, class member, bit-field, template, template specialization, namespace, or parameter pack)
+ 
+For example
+constexpr std::meta::info a = ^^int;        // a type
+constexpr std::meta::info b = ^^::;         // the global namespace
+constexpr std::meta::info c = ^^Color::red; // an enumerator
+constexpr std::meta::info d = ^^main;       // a function
+constexpr std::meta::info e = ^^some_var;   // a variable
+ 
+The std::meta::info's returned contain different internal state. For example, you could get the parameters from a function, but not a variable.
+The singular type approach makes iteration much easier. For example:
+ 
+for (std::meta::info m : std::meta::nonstatic_data_members_of(^^T, std::meta::access_context::unchecked())) {}
+The data members, could be an enum, a variable, or a function etc, and there is a singe type we can iterate over.
+ 
+The context is what permissions level / view you can see into that class/struct.
+current: What you normally would be able to
+unprivileged: Whatever the global namespace could access
+unchecked: No access check, can access everything
+ 
+You can splice back into the code:
+constexpr auto t = ^^int;
+[:t:] x = 42;              // splice as a type -> int x = 42;
+ 
+Some functions:
+Check what type of std::meta::info we have
+is_type(r)  is_namespace(r)  is_function(r)  is_variable(r)
+is_enumerator(r)  is_nonstatic_data_member(r)  is_template(r)  is_concept(r)
+is_value(r)  is_object(r)  is_class_type(r)  is_enum_type(r)
+ 
+Reading properties
+identifier_of(r)      // "x" as a string_view (only if it has a name)
+display_string_of(r)  // human-readable, works on anything
+type_of(r)            // ^^int for the member x; the type of a variable, etc.
+return_type_of(r)     // for functions
+is_public(r)  is_virtual(r)  is_const(r)  is_static_member(r) ...
+size_of(r)  alignment_of(r)  offset_of(r)   // layout info
+ 
+Navigation
+members_of(^^N::S, ctx)                     // all members (vector<info>)
+nonstatic_data_members_of(^^N::S, ctx)      // just fields
+bases_of(^^Derived, ctx)                    // base classes
+enumerators_of(^^N::Color)                  // red, green
+parameters_of(^^func)                       // function params
+parent_of(^^N::S::x)                        // ^^N::S
+template_of(^^N::Box<int>)                  // ^^N::Box
+template_arguments_of(^^N::Box<int>)        // {^^int}
+dealias(^^N::Alias)                         // ^^int
+ 
+Implementing a forward declared struct / class:
+struct Point;   // declared but incomplete
+ 
+consteval {
+    std::meta::define_aggregate(^^Point, {
+        std::meta::data_member_spec(^^int,    {.name = "x"}),
+        std::meta::data_member_spec(^^int,    {.name = "y"}),
+        std::meta::data_member_spec(^^double, {.name = "weight"}),
+    });
+}
+https://en.cppreference.com/cpp/meta/data_member_spec
+ 
+The ^^ operator is only defined for the following:
+https://en.cppreference.com/cpp/language/operator_reflection#Syntax
+
+^^ ::	(1)	
+^^ reflection-name	(2)	
+^^ type-id	(3)	
+^^ id-expression	(4)	
+reflection-name	-	an identifier, optionally qualified, optionally using template disambiguator. This form takes precedence over type-id and id-expression
+type-id	-	a type-id
+id-expression	-	an id-expression (not sub-objects / members)
+ 
+by that, it basically means you can only use it on namespaces, or on identifiers, or types. You can not use it on raw values, like 42, or 61, functions, or sub-members (like s.b). Use reflect_constant(raw value), reflect_function(function) or reflect_object(object) for that.

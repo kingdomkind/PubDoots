@@ -1,0 +1,4 @@
+type = process
+command = /usr/bin/scx_lavd
+restart = true
+restart-delay = 2

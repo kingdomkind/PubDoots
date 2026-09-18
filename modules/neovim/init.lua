@@ -48,18 +48,18 @@ end
 
 --> Generic Settings
 do
-    vim.opt.clipboard:append("unnamedplus")   --> Enable system clipboard support
-    vim.opt.termguicolors = true              --> Enable 24-bit colour
-    vim.opt.cmdheight = 0                     --> Only show command line when entering a command
-    vim.opt.relativenumber = false            --> Disable relative line numbers
-    vim.opt.number = true                     --> Enable absolute line number for the current line
-    vim.opt.signcolumn = "yes"                --> Show sign column
-    vim.opt.tabstop = 4                       --> Visual size of a tab, in spaces
-    vim.opt.expandtab = true                  --> Convert tabs to equivalent spaces size
-    vim.opt.shiftwidth = 4                    --> Number of spaces for indentation (eg. > or <).
-    vim.opt.softtabstop = 4                   --> How many spaces to jump in insert mode, when you press <TAB> or backspace.
-    vim.opt.smarttab = false;                 --> If true, uses shiftwidth for tabsize when there is preceding whitespace, else, uses tabstop
-    vim.opt.swapfile = false                  --> Neovim will no longer generate swapfiles
+    vim.opt.clipboard:append("unnamedplus") --> Enable system clipboard support
+    vim.opt.termguicolors = true            --> Enable 24-bit colour
+    vim.opt.cmdheight = 0                   --> Only show command line when entering a command
+    vim.opt.relativenumber = false          --> Disable relative line numbers
+    vim.opt.number = true                   --> Enable absolute line number for the current line
+    vim.opt.signcolumn = "yes"              --> Show sign column
+    vim.opt.tabstop = 4                     --> Visual size of a tab, in spaces
+    vim.opt.expandtab = true                --> Convert tabs to equivalent spaces size
+    vim.opt.shiftwidth = 4                  --> Number of spaces for indentation (eg. > or <).
+    vim.opt.softtabstop = 4                 --> How many spaces to jump in insert mode, when you press <TAB> or backspace.
+    vim.opt.smarttab = false;               --> If true, uses shiftwidth for tabsize when there is preceding whitespace, else, uses tabstop
+    vim.opt.swapfile = false                --> Neovim will no longer generate swapfiles
     vim.keymap.set("t", "<Esc>", "<C-\\><C-n>")
     vim.keymap.set("t", kb.escape_in_terminal, "<Esc>")
     vim.keymap.set("n", kb.show_diagnostic, function() vim.diagnostic.open_float(nil, { focus = false }) end)
@@ -117,6 +117,9 @@ do
     vim.pack.add({
         "https://github.com/neovim/nvim-lspconfig"
     })
+
+    --> Enable inlay type hinting
+    vim.lsp.inlay_hint.enable(true)
     --> These are the names nvim-lspconfig calls their configs
     local lsps = {
         "rust_analyzer",

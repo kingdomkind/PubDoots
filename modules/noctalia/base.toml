@@ -185,3 +185,7 @@ lock_keys = false
 
 [brightness]
 enable_ddcutil = true
+
+# >> Hooks <<
+[hooks]
+started = "noctalia msg bar-hide"

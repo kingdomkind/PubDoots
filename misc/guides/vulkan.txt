@@ -1,0 +1,75 @@
+# Memory
+
+Memory is allocated via https://docs.vulkan.org/refpages/latest/refpages/source/vkAllocateMemory.html, and then 
+returns a VkDeviceMemory handle. This handle can then be bound to a buffer, or an image, as the backing memory.
+
+# Dedicate Allocation Info
+
+https://docs.vulkan.org/refpages/latest/refpages/source/VkMemoryDedicatedAllocateInfo.html
+
+This allows you to specify the image that will be bound to the memory in advance.
+Note, the following explanation is derived from asking AI, and therefore will contain inaccuracies.
+It does however, provide a reasonable explanation that I am happy to go with.
+
+When giving a DRM format modifier to an image, and then binding memory to that image, vulkan writes internal
+tiling metadata (i.e. variable values) to the page table containing the mapping to that memory. Of course, the
+page table is for virtual addresses, and is per process, meaning that other processes cannot see our internal
+tiling metadata.
+
+This becomes an issue, when we export our image as a dmabuf, since we only are exporting the memory.
+Another process importing the memory, even given the DRM modifier (i.e. the tiling modifier), cannot re-derive
+the variable internal data the image stored in the memory had. Therefore, the dedicated allocation info tells
+the memory in advance what image will be attached, which allows it to attach this metadata directly to the memory
+itself, rather than the page tables. This therefore means, it can now be shared across processes.
+
+
+# Formats, tiling and layouts.
+
+Images have a known format, for example RGBA8888, or Y4Cb2Cr2, which stores brightness on one plane at full res,
+and Cb and Cr at half resolution on different planes.
+
+These formats are the "theoretical" form they could take. Although RGBA8888 only specifies 1 plane of contiguous
+memory, hardware may prefer to store it as multiple planes (and the same goes for Y4Cb2Cr2).
+Therefore, to describe the actual underlying way the hardware stores it, we have something called the "image tiling".
+
+Setting this to linear enforces the use of the "theoretical" format, which may be inefficient for the hardware,
+and setting it to optimal lets the driver choose which it thinks it is best. We can also see what tiling form it chose,
+and relate this to a named "DRM TILING MODIFIER", which gives specific names to each vendor's specific internal tiling
+(so apps can share the images).
+
+Theoretically, given we know the the tiling form, we know EXACTLY how the image is stored in memory, and therefore we
+should not need anything more. However, caches may not be flushed, etc, and therefore we have an additional property
+called "image layout". This specifies the types of operations we will be performing on the image, i.e. it is an access
+mask, which helps to prevent excessive flushing. Setting it to general means worst case scenario, enforce the consistent
+memory layout at all times, and hence, it is compatible with everything. We may have something like shader read only, which
+is most efficient for usage in shader reads, but will not flush other stuff and is therefore unstable for other usage.
+
+Therefore, given we are sharing an image to another app, we should set the layout to general, to force all our flushes.
+I have lied here - it is not just about flushing (data may even be rewritten), nor do i know how true this is, but it is
+a good headcanon, atleast for me.
+
+# Second explanation of the above
+
+To what I know, there are essentially 3 layers controlling the format of the image:
+ 
+The actual Image format - A theoretical understanding of how an image can be represented in memory. For example RGBA8888 would just be 1 memory plane, with 8 bit numbers stored sequentially}
+ 
+The image "tiling" - How the hardware actually stores the image, internally. The image format is just that, a theoretical understanding, and hardware often prefers different layouts. There are a bunch of enums, each prefixed with a vendor specific ID, that specifies the different modifiers. So for example, that RGBA8888 may infact be stored as 2 memory planes, and not sequentially as 8 bit numbers, but perhaps interleaved for whatever reason on intel GPUs (this example is made up). When you set the tiling to eOptimal, it allows the driver to pick whatever tiling it thinks is best. When you set the tiling to eLinear, it disables tiling and forces the canonical "theoretical" image format. You can manually specify the tiling it should take, too, by enabling an extension (which gives visibility to the aforementioned enums). 
+ 
+The image "layout" - This to me seems to be very overlapping with image tiling, apart from the fact where the tiling is the "static" modifier (i.e. doesn't change throughout the image lifetime), the image layout does depending on how you access it. So given the image tiling stores the image in a more optimal form for that hardware, the layout furthers that by making each form optimal for each stage the image may be in. The driver may prefer some form for reading in a shader for example, and another for being the destination for some copy. However, for the layout, I prefer to think of it as the driver just not flushing certain internal caches it has during certain stages, and the transitions forces those caches to be flushed. They may not always need to be, and hence flushing them excessively is wasted performance, hence you are given control. That is only half the truth however, since it can also change the actual data itself (post-flush), but it gives a nice mental model to separate the layout and the tiling for me. Setting the layout to eGeneral disables this behaviour, and hence it works with anything (I like to think of it essentially meaning "force flush all caches for me, assuming I can access this any way". I have personally used this  when handing off images between programs, as you cannot predict how another program will access that image)
+ 
+For reference, a memory plane is just a contiguous allocation of memory, you can have multiple memory planes in the same buffer, or you could have one per buffer, it's just different contiguous areas of memory
+
+# Structure Chain
+
+Structure chain will fill in the pnext chain for us, with the first struct being the base struct.
+It will of course operate on the "2" version of structs, which added the pnext pointer, and it allows you to
+get that struct back from the chain (with the pnext filled out) with .get<StructName>().
+
+You can also retrieve structs that aren't the base struct, with the same semantics, perhaps just to read their
+data. For example, there are some functions which will fill in the structs you point to with pnext, and so to
+read the result, you would .get<>() the non base struct.
+
+Ultimatley, just a compile checked wrapper around a manual pnext chain, nothing special.
+
+https://github.com/KhronosGroup/Vulkan-Hpp/blob/main/docs/Usage.md#structure-pointer-chains

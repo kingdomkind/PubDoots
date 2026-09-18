@@ -1,4 +1,5 @@
-local terminal = "kitty"
+local terminal = "kitty --single-instance"
+local browser = "brave-origin --disable-features=WaylandWpColorManagerV1"
 
 --> Exec Onces
 hl.on("hyprland.start", function()
@@ -89,19 +90,23 @@ local x = {
 }
 
 --> Non-compositor binds
-hl.bind(x.a .. "+D", hl.dsp.exec_cmd("brave-origin --disable-features=WaylandWpColorManagerV1"))
+hl.bind(x.a .. "+D", hl.dsp.exec_cmd(browser))
 hl.bind(x.a .. "+B", hl.dsp.exec_cmd("firefox"))
 hl.bind(x.a .. "+Q", hl.dsp.exec_cmd(terminal))
 hl.bind(x.a .. "+N", hl.dsp.exec_cmd("alacritty"))
 hl.bind(x.a .. "+A", hl.dsp.exec_cmd("cosmic-files"))
 hl.bind(x.a .. "+X", hl.dsp.exec_cmd(terminal .. " -e yazi"))
 hl.bind(x.a .. "+U", hl.dsp.exec_cmd("env QT_SCALE_FACTOR=1.5 krita"))
+-- Discord web app in Brave app mode
+hl.bind(x.a .. "+T", hl.dsp.exec_cmd(browser .. " --app=https://discord.com/app"))
 hl.bind(x.a .. "+PAGE_UP", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"), { repeating = true })
 hl.bind(x.a .. "+PAGE_DOWN", hl.dsp.exec_cmd("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"), { repeating = true })
 
 --> Compositor binds
 hl.bind(x.a .. "+C", hl.dsp.window.close())
-hl.bind(x.a .. "+F", hl.dsp.window.fullscreen())
+--> 0 = regular, 1 = maximised, 2 = fullscreen
+--> internal is what hyprland sees, client is what the client sees
+hl.bind(x.a .. "+F", hl.dsp.window.fullscreen_state( { internal = 2, client = 0, action = "toggle" } ))
 hl.bind(x.b .. "+F", hl.dsp.window.fullscreen_state({ internal = 0, client = 2, action = "toggle" }))
 hl.bind(x.a .. "+bracketright", hl.dsp.layout("swapsplit"))
 hl.bind(x.a .. "+bracketleft", hl.dsp.layout("togglesplit"))
@@ -113,6 +118,18 @@ hl.bind(x.a .. "+up", hl.dsp.window.resize({ x = 0, y = -30, relative = true }),
 hl.bind(x.a .. "+down", hl.dsp.window.resize({ x = 0, y = 30, relative = true }), { repeating = true })
 hl.bind(x.a .. "+mouse:272", hl.dsp.window.drag(), { mouse = true })
 hl.bind(x.a .. "+mouse:273", hl.dsp.window.resize(), { mouse = true })
+
+--> Set clients to our fullscreen mode (internal 2, client 0) when they try to fullscreen
+hl.on("window.fullscreen", function(window)
+    if window.fullscreen == 2 and window.fullscreen_client == 2 then
+        hl.dispatch(hl.dsp.window.fullscreen_state({
+            internal = 0,
+            client = 2,
+            action = "set",
+            window = window,
+        }))
+    end
+end)
 
 --> Screenshots Binds
 hl.bind(x.a .. "+S", hl.dsp.exec_cmd("grimblast --freeze copy area"))

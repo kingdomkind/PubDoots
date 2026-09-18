@@ -1,0 +1,2 @@
+Box = std::unique_ptr
+[T] is a slice, equivalent to an std::span, [T; Size] is an array

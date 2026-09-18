@@ -1,0 +1,5 @@
+type = process
+command = /usr/bin/llama-server --models-preset /home/pika/PubDoots/unique/sirius/llama.ini --agent --sleep-idle-seconds 300
+working-dir = /home/pika/Models
+restart = true
+log-type = buffer

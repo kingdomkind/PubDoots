@@ -1,0 +1,44 @@
+A .spv file is called a spirv module.
+Instructions of a certain type appear in a specific order, which is: https://registry.khronos.org/SPIR-V/specs/unified1/SPIRV.html#LogicalLayout.
+ 
+An excerpt:
+1 All OpCapability instructions.
+2 Optional OpExtension instructions (extensions to SPIR-V).
+3 Optional OpExtInstImport instructions.
+4 The single required OpMemoryModel instruction.
+5 All entry point declarations, using OpEntryPoint.
+...
+ 
+spirv modules can be consumed by multiple client APIs (eg. vulkan or directx), supporting different features.
+Features are called "capabilities" which are defined by using the OpCapability instruction. You will notice that
+spirv is largely declarative (https://registry.khronos.org/SPIR-V/specs/unified1/SPIRV.html#_design_principles),
+which leads to that specific code ordering being mandated.
+ 
+You can use spirv-dis to dump the disassembly from a binary spv file.
+ 
+Spirv is split into "words" (i.e. groups of 4 bytes / 32 bits).
+The way it goes is:
+Opcode Operand Operand ... | Opcode Operand ... | continue
+The high-order 16 bits are the number of the total words in the instruction (including the opcode)
+The lower-order 16 bits relate to the actual opcode to execute on the operands.
+ 
+The built in types:
+OpTypeBool
+OpTypeInt
+OpTypeFloat
+OpTypeVoid
+The rest of the list can be found at: https://registry.khronos.org/SPIR-V/specs/unified1/SPIRV.html#Type-Declaration
+Keep in mind these these are regular opcodes, which put the type into the Result<Id>. Id essentially means variable,
+result meaning it outputs into it. Types are just regular values, and you "generate" the types from opcodes.
+ 
+Varaiables additionally have storage classes: https://registry.khronos.org/SPIR-V/specs/unified1/SPIRV.html#Storage_Class
+This is what the underlying storage for the objects are, eg. Uniform, Output (as in, output 0 of the pipeline), Input, ...
+ 
+Spirv also has functions. You use OpLabel to start a a block (https://registry.khronos.org/SPIR-V/specs/unified1/SPIRV.html#_control_flow)
+You can then use OpReturn, OpReturnValue etc.
+ 
+There are additional addressing models that can be set, that changes the behaviour of pointers, see:
+https://registry.khronos.org/SPIR-V/specs/unified1/SPIRV.html#MemoryModelSection
+ 
+Spirv is versioned.
+https://github.com/KhronosGroup/SPIRV-Guide/blob/main/chapters/spirv_internals.md

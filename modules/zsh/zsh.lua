@@ -1,6 +1,8 @@
 local pl = require("pl.path")
 
-return function(lib)
+return function(lib, args)
+    local launch = (args and args.launch) or "exec dbus-run-session start-hyprland"
+
     local content = [[
 #> Exports
 export PATH="/home/pika/.bun/bin:$PATH"
@@ -14,6 +16,8 @@ alias grep='grep --color=auto'
 alias vi="nvim"
 alias sudo="pkexec "
 alias space="du -sh ./ ; du -sh ./*"
+#> Exit any namespaces we are in (i.e, join the namespaces of PID 1)
+alias esc='sudo nsenter --target 1 --mount --setuid $(id -u) --setgid $(id -g)'
 
 build-config() {
     (cd ]] .. pl.abspath(lib.dootsd) .. [[ && ./reload.sh "$@")
@@ -26,7 +30,7 @@ alias editm='cd ]] .. pl.abspath(lib.modulesd) .. [['
 alias editu='cd ]] .. pl.abspath(lib.uniqued) .. [['
 
 # Start Hyprland if on TTY1
-if [ "$(tty)" = "/dev/tty1" ]; then exec dbus-run-session start-hyprland; fi
+if [ "$(tty)" = "/dev/tty1" ]; then ]] .. launch .. [[; fi
 
 autoload -U colors && colors
 
